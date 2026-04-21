@@ -1,0 +1,13 @@
+<svg width="1400" height="1100" viewBox="0 0 1400 1100" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1400" height="1100" fill="#F7F8FB"/>
+  <rect x="80" y="80" width="1240" height="940" rx="42" fill="#E8EDF3"/>
+  <rect x="150" y="150" width="510" height="770" rx="32" fill="#FFFFFF"/>
+  <rect x="740" y="150" width="510" height="350" rx="32" fill="#25BCBD" fill-opacity="0.16"/>
+  <rect x="740" y="560" width="510" height="360" rx="32" fill="#2B3140"/>
+  <rect x="210" y="220" width="390" height="32" rx="16" fill="#D3DCE5"/>
+  <rect x="210" y="286" width="300" height="24" rx="12" fill="#E2E8EE"/>
+  <rect x="210" y="350" width="360" height="150" rx="24" fill="#EEF3F7"/>
+  <rect x="210" y="540" width="360" height="150" rx="24" fill="#EEF3F7"/>
+  <rect x="210" y="730" width="360" height="120" rx="24" fill="#EEF3F7"/>
+  <text x="150" y="60" fill="#191919" font-family="Pretendard, Arial, sans-serif" font-size="36" font-weight="700">Operation support visual placeholder</text>
+</svg>

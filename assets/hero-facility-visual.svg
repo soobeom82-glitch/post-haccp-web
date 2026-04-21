@@ -1,0 +1,10 @@
+<svg width="1600" height="1400" viewBox="0 0 1600 1400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1600" height="1400" fill="#F7F8FB"/>
+  <rect x="94" y="108" width="1412" height="1184" rx="48" fill="#E9EEF4"/>
+  <rect x="160" y="174" width="1280" height="828" rx="36" fill="#DDE5EE"/>
+  <rect x="220" y="234" width="1160" height="708" rx="28" fill="#25BCBD" fill-opacity="0.16"/>
+  <rect x="220" y="1038" width="760" height="38" rx="19" fill="#C8D3DE"/>
+  <rect x="220" y="1104" width="520" height="28" rx="14" fill="#D7E0E8"/>
+  <rect x="220" y="1160" width="620" height="28" rx="14" fill="#D7E0E8"/>
+  <text x="220" y="138" fill="#191919" font-family="Pretendard, Arial, sans-serif" font-size="42" font-weight="700">Hero facility visual placeholder</text>
+</svg>

@@ -1,0 +1,6 @@
+<svg width="240" height="80" viewBox="0 0 240 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="80" height="80" rx="24" fill="#25BCBD"/>
+  <path d="M25 24H44.5C57.4787 24 68 34.5213 68 47.5V47.5C68 60.4787 57.4787 71 44.5 71H25V24Z" fill="#2B3140"/>
+  <text x="98" y="32" fill="#191919" font-family="Pretendard, Arial, sans-serif" font-size="16" font-weight="800">POST HACCP</text>
+  <text x="98" y="56" fill="#51556A" font-family="Pretendard, Arial, sans-serif" font-size="13" font-weight="500">logo placeholder</text>
+</svg>
