@@ -691,11 +691,66 @@ textarea {
 }
 
 .site-footer {
+  display: grid;
+  gap: 18px;
+  padding: 36px 0 42px;
+  border-top: 1px solid var(--line);
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+  line-height: 1.8;
+}
+
+.footer-brand {
   display: flex;
-  justify-content: space-between;
-  gap: 20px;
-  padding: 28px 0 42px;
-  font-size: 0.92rem;
+  align-items: center;
+  gap: 14px;
+}
+
+.footer-logo {
+  width: 58px;
+  height: 58px;
+  object-fit: contain;
+  flex: 0 0 auto;
+}
+
+.footer-brand-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.footer-brand-copy strong {
+  color: var(--ink);
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.footer-brand-copy span {
+  font-size: 0.9rem;
+}
+
+.footer-info {
+  display: grid;
+  gap: 4px;
+}
+
+.footer-info p,
+.footer-copy {
+  margin: 0;
+}
+
+.footer-info p:first-child {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.footer-info a {
+  color: var(--ink-soft);
+}
+
+.footer-copy {
+  color: var(--ink-soft);
+  font-size: 0.9rem;
 }
 
 @media (max-width: 1024px) {
@@ -751,7 +806,7 @@ textarea {
   }
 
   .site-footer {
-    flex-direction: column;
+    padding-top: 30px;
   }
 
 }
