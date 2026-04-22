@@ -641,7 +641,6 @@ textarea {
 .footer-brand {
   display: flex;
   align-items: center;
-  gap: 14px;
 }
 
 .footer-logo {
@@ -649,22 +648,6 @@ textarea {
   height: 58px;
   object-fit: contain;
   flex: 0 0 auto;
-}
-
-.footer-brand-copy {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.footer-brand-copy strong {
-  color: var(--ink);
-  font-size: 1rem;
-  font-weight: 800;
-}
-
-.footer-brand-copy span {
-  font-size: 0.9rem;
 }
 
 .footer-info {
