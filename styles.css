@@ -588,35 +588,6 @@ textarea {
   border-radius: var(--radius-lg);
 }
 
-.image-story {
-  display: grid;
-  grid-template-columns: 1.05fr 0.95fr;
-  gap: 22px;
-  align-items: center;
-}
-
-.image-story-media {
-  overflow: hidden;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-xl);
-  background: var(--bg-soft);
-}
-
-.image-story-media img {
-  width: 100%;
-  aspect-ratio: 1.15 / 0.9;
-  object-fit: cover;
-}
-
-.story-points {
-  display: grid;
-  gap: 10px;
-  padding-left: 18px;
-  margin: 20px 0 0;
-  color: var(--ink-soft);
-  line-height: 1.75;
-}
-
 .services-layout {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -819,7 +790,6 @@ textarea {
 @media (max-width: 1024px) {
   .hero,
   .split,
-  .image-story,
   .contact-card {
     grid-template-columns: 1fr;
   }
