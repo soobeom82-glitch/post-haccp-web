@@ -588,12 +588,6 @@ textarea {
   align-items: start;
 }
 
-.operation-support-copy h2 {
-  margin: 0;
-  font-size: clamp(2rem, 3vw, 3rem);
-  line-height: 1.2;
-}
-
 .support-carousel {
   width: 75%;
   justify-self: start;
