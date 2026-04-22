@@ -282,7 +282,6 @@ textarea {
 .fit-grid article,
 .contact-card,
 .faq-list details,
-.value-band,
 .process-list li {
   border: 1px solid var(--line);
 }
@@ -421,7 +420,6 @@ textarea {
 }
 
 .section-heading h2,
-.value-band h2,
 .contact-copy h2 {
   font-size: clamp(2.05rem, 4vw, 3.4rem);
   line-height: 1.18;
@@ -582,27 +580,16 @@ textarea {
   letter-spacing: -0.03em;
 }
 
-.value-band {
-  display: grid;
-  grid-template-columns: 0.9fr 1.1fr;
-  gap: 28px;
-  align-items: center;
-  width: 100%;
-  max-width: var(--max-width);
-  margin-left: auto;
-  margin-right: auto;
-  padding: calc(var(--card-pad-lg) + 8px);
-  border-radius: var(--radius-xl);
-  background: var(--navy);
-  color: var(--white);
+.value-card {
+  max-width: none;
 }
 
-.value-band p,
-.value-band .eyebrow {
+.value-card p,
+.value-card .eyebrow {
   color: rgba(255, 255, 255, 0.76);
 }
 
-.value-band .eyebrow::before {
+.value-card .eyebrow::before {
   background: rgba(37, 188, 189, 0.9);
 }
 
@@ -704,7 +691,6 @@ textarea {
   .hero,
   .split,
   .image-story,
-  .value-band,
   .contact-card {
     grid-template-columns: 1fr;
   }
@@ -755,13 +741,6 @@ textarea {
 
   .site-footer {
     flex-direction: column;
-  }
-
-  .logo-band .section-heading,
-  .logo-band-grid,
-  .value-band {
-    padding-left: var(--card-pad);
-    padding-right: var(--card-pad);
   }
 
 }
