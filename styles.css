@@ -76,8 +76,10 @@ textarea {
 }
 
 .brand-logo {
-  width: 42px;
-  height: 42px;
+  width: 58px;
+  height: 58px;
+  object-fit: contain;
+  flex: 0 0 auto;
 }
 
 .brand-text {
@@ -465,12 +467,18 @@ textarea {
 .logo-card img {
   width: 86px;
   height: 86px;
+  object-fit: contain;
 }
 
 .logo-card p {
   margin: 0;
   color: var(--ink-soft);
   line-height: 1.7;
+}
+
+.logo-card-primary img {
+  width: 112px;
+  height: 112px;
 }
 
 .image-story {
