@@ -693,6 +693,8 @@ textarea {
   gap: 24px;
   padding: var(--card-pad-lg);
   border-radius: var(--radius-xl);
+  border-color: rgba(37, 188, 189, 0.18);
+  background: linear-gradient(180deg, #fcffff 0%, #f2fbfb 100%);
   box-shadow: var(--shadow);
 }
 
