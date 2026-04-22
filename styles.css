@@ -383,14 +383,12 @@ textarea {
   padding: 76px 0;
 }
 
-.logo-section,
 .problem,
 .fit,
 .faq {
   background: var(--bg-soft);
 }
 
-.logo-section,
 .problem,
 .fit,
 .faq,
@@ -404,30 +402,6 @@ textarea {
 .section-heading {
   max-width: 780px;
   margin-bottom: 30px;
-}
-
-.logo-intro-card,
-.logo-band-grid {
-  width: 100%;
-  max-width: var(--max-width);
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.logo-intro-card {
-  margin-bottom: 18px;
-}
-
-.logo-intro-card h2 {
-  margin: 0;
-  font-size: clamp(2.05rem, 4vw, 3.4rem);
-  line-height: 1.18;
-}
-
-.logo-intro-card p:last-child {
-  margin: 14px 0 0;
-  color: var(--ink-soft);
-  line-height: 1.8;
 }
 
 .section-heading h2,
@@ -470,42 +444,6 @@ textarea {
 .fit-grid article {
   padding: var(--card-pad);
   border-radius: var(--radius-lg);
-}
-
-.logo-band-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 18px;
-  padding-left: 0;
-  padding-right: 0;
-}
-
-.logo-card {
-  display: grid;
-  justify-items: center;
-  gap: 18px;
-  padding: var(--card-pad);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
-  background: var(--white);
-  text-align: center;
-}
-
-.logo-card img {
-  width: 86px;
-  height: 86px;
-  object-fit: contain;
-}
-
-.logo-card p {
-  margin: 0;
-  color: var(--ink-soft);
-  line-height: 1.7;
-}
-
-.logo-card-primary img {
-  width: 112px;
-  height: 112px;
 }
 
 .image-story {
@@ -793,7 +731,6 @@ textarea {
   .problem-grid,
   .solution-grid,
   .fit-grid,
-  .logo-band-grid,
   .services-layout,
   .process-list,
   .contact-form,
