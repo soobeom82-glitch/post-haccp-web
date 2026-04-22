@@ -383,14 +383,14 @@ textarea {
   padding: 76px 0;
 }
 
-.logo-band,
+.logo-section,
 .problem,
 .fit,
 .faq {
   background: var(--bg-soft);
 }
 
-.logo-band,
+.logo-section,
 .problem,
 .fit,
 .faq,
@@ -406,7 +406,7 @@ textarea {
   margin-bottom: 30px;
 }
 
-.logo-band .section-heading,
+.logo-intro-card,
 .logo-band-grid {
   width: 100%;
   max-width: var(--max-width);
@@ -414,9 +414,20 @@ textarea {
   margin-right: auto;
 }
 
-.logo-band .section-heading {
-  padding-left: 0;
-  padding-right: 0;
+.logo-intro-card {
+  margin-bottom: 18px;
+}
+
+.logo-intro-card h2 {
+  margin: 0;
+  font-size: clamp(2.05rem, 4vw, 3.4rem);
+  line-height: 1.18;
+}
+
+.logo-intro-card p:last-child {
+  margin: 14px 0 0;
+  color: var(--ink-soft);
+  line-height: 1.8;
 }
 
 .section-heading h2,
