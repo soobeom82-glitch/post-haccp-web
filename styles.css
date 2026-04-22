@@ -594,10 +594,9 @@ textarea {
   line-height: 1.2;
 }
 
-.operation-support-copy p:last-child {
-  margin: 16px 0 0;
-  color: var(--ink-soft);
-  line-height: 1.8;
+.support-carousel {
+  width: 75%;
+  justify-self: start;
 }
 
 .support-carousel .visual-card img {
@@ -803,6 +802,10 @@ textarea {
   .operation-support,
   .contact-card {
     grid-template-columns: 1fr;
+  }
+
+  .support-carousel {
+    width: 100%;
   }
 
   .process-list {
