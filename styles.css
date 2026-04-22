@@ -757,6 +757,13 @@ textarea {
     flex-direction: column;
   }
 
+  .logo-band .section-heading,
+  .logo-band-grid,
+  .value-band {
+    padding-left: var(--card-pad);
+    padding-right: var(--card-pad);
+  }
+
 }
 
 @media (max-width: 520px) {
