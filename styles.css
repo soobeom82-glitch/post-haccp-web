@@ -642,19 +642,6 @@ textarea {
   letter-spacing: -0.03em;
 }
 
-.value-card {
-  max-width: none;
-}
-
-.value-card p,
-.value-card .eyebrow {
-  color: rgba(255, 255, 255, 0.76);
-}
-
-.value-card .eyebrow::before {
-  background: rgba(37, 188, 189, 0.9);
-}
-
 .faq-list {
   display: grid;
   gap: 14px;
