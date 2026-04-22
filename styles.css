@@ -581,6 +581,29 @@ textarea {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+.operation-support {
+  display: grid;
+  grid-template-columns: 0.82fr 1.18fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.operation-support-copy h2 {
+  margin: 0;
+  font-size: clamp(2rem, 3vw, 3rem);
+  line-height: 1.2;
+}
+
+.operation-support-copy p:last-child {
+  margin: 16px 0 0;
+  color: var(--ink-soft);
+  line-height: 1.8;
+}
+
+.support-carousel .visual-card img {
+  aspect-ratio: 4 / 5;
+}
+
 .problem-card,
 .solution-card,
 .fit-grid article {
@@ -777,6 +800,7 @@ textarea {
 @media (max-width: 1024px) {
   .hero,
   .split,
+  .operation-support,
   .contact-card {
     grid-template-columns: 1fr;
   }

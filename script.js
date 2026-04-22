@@ -4,9 +4,7 @@ const year = document.querySelector("#year");
 const form = document.querySelector(".contact-form");
 const nextInput = document.querySelector('input[name="_next"]');
 const submitButton = form ? form.querySelector('button[type="submit"]') : null;
-const carouselTrack = document.querySelector(".carousel-track");
-const carouselDots = Array.from(document.querySelectorAll(".carousel-dot"));
-const carouselButtons = Array.from(document.querySelectorAll(".carousel-button"));
+const carousels = Array.from(document.querySelectorAll("[data-carousel]"));
 
 if (toggle && nav) {
   toggle.addEventListener("click", () => {
@@ -39,7 +37,15 @@ if (form && submitButton) {
   });
 }
 
-if (carouselTrack && carouselDots.length) {
+carousels.forEach((carousel) => {
+  const carouselTrack = carousel.querySelector(".carousel-track");
+  const carouselDots = Array.from(carousel.querySelectorAll(".carousel-dot"));
+  const carouselButtons = Array.from(carousel.querySelectorAll(".carousel-button"));
+
+  if (!carouselTrack || !carouselDots.length) {
+    return;
+  }
+
   const slides = Array.from(carouselTrack.children);
 
   const setActiveSlide = (index) => {
@@ -78,4 +84,4 @@ if (carouselTrack && carouselDots.length) {
       setActiveSlide(getSlideIndex());
     });
   });
-}
+});
