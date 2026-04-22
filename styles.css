@@ -410,14 +410,14 @@ textarea {
 .logo-band .section-heading,
 .logo-band-grid,
 .value-band {
-  max-width: var(--max-width);
+  width: min(calc(100% - (var(--page-gutter) * 2)), var(--max-width));
   margin-left: auto;
   margin-right: auto;
 }
 
 .logo-band .section-heading {
-  padding-left: 6px;
-  padding-right: 6px;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 .section-heading h2,
@@ -467,8 +467,8 @@ textarea {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 18px;
-  padding-left: 6px;
-  padding-right: 6px;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 .logo-card {
@@ -753,11 +753,6 @@ textarea {
     flex-direction: column;
   }
 
-  .logo-band .section-heading,
-  .logo-band-grid {
-    padding-left: 0;
-    padding-right: 0;
-  }
 }
 
 @media (max-width: 520px) {
