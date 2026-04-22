@@ -409,7 +409,8 @@ textarea {
 
 .logo-band .section-heading,
 .logo-band-grid {
-  width: min(calc(100% - (var(--page-gutter) * 2)), var(--max-width));
+  width: 100%;
+  max-width: var(--max-width);
   margin-left: auto;
   margin-right: auto;
 }
@@ -587,7 +588,9 @@ textarea {
   gap: 28px;
   align-items: center;
   width: 100%;
-  max-width: none;
+  max-width: var(--max-width);
+  margin-left: auto;
+  margin-right: auto;
   padding: calc(var(--card-pad-lg) + 8px);
   border-radius: var(--radius-xl);
   background: var(--navy);
