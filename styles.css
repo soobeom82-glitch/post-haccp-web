@@ -254,24 +254,115 @@ textarea {
   gap: 16px;
 }
 
-.hero-visual {
-  margin: 0;
+.hero-carousel {
+  display: grid;
+  gap: 14px;
+}
+
+.carousel-track {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 100%;
+  gap: 16px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+}
+
+.carousel-track::-webkit-scrollbar {
+  display: none;
+}
+
+.visual-card {
   overflow: hidden;
   border: 1px solid var(--line);
   border-radius: var(--radius-xl);
-  background: var(--bg-soft);
+  background: var(--white);
+  scroll-snap-align: start;
+  box-shadow: var(--shadow);
 }
 
-.hero-visual img {
+.visual-card img {
   width: 100%;
-  aspect-ratio: 1.15 / 1;
+  aspect-ratio: 1.15 / 0.84;
   object-fit: cover;
 }
 
-.hero-visual figcaption {
-  padding: var(--card-pad) var(--card-pad) calc(var(--card-pad) - 4px);
+.visual-card-copy {
+  padding: var(--card-pad);
+}
+
+.visual-card-label {
+  margin: 0 0 10px;
+  color: var(--brand-strong);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.visual-card h2 {
+  margin: 0;
+  font-size: 1.45rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.visual-card p:last-child {
+  margin: 12px 0 0;
   color: var(--ink-soft);
+  line-height: 1.75;
+}
+
+.carousel-controls,
+.carousel-buttons,
+.carousel-dots {
+  display: flex;
+  align-items: center;
+}
+
+.carousel-controls {
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.carousel-buttons,
+.carousel-dots {
+  gap: 10px;
+}
+
+.carousel-dot,
+.carousel-button {
+  border: 1px solid var(--line);
+  background: var(--white);
+  color: var(--ink-soft);
+}
+
+.carousel-dot {
+  width: 12px;
+  height: 12px;
+  padding: 0;
+  border-radius: 999px;
+}
+
+.carousel-dot.is-active {
+  border-color: var(--brand);
+  background: var(--brand);
+}
+
+.carousel-button {
+  min-height: 42px;
+  padding: 0 16px;
+  border-radius: 999px;
   font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.carousel-button:hover,
+.carousel-dot:hover {
+  border-color: var(--brand);
 }
 
 .panel-card,
@@ -727,6 +818,15 @@ textarea {
 
   .site-footer {
     padding-top: 30px;
+  }
+
+  .carousel-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .carousel-buttons {
+    justify-content: space-between;
   }
 
 }

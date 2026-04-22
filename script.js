@@ -4,6 +4,9 @@ const year = document.querySelector("#year");
 const form = document.querySelector(".contact-form");
 const nextInput = document.querySelector('input[name="_next"]');
 const submitButton = form ? form.querySelector('button[type="submit"]') : null;
+const carouselTrack = document.querySelector(".carousel-track");
+const carouselDots = Array.from(document.querySelectorAll(".carousel-dot"));
+const carouselButtons = Array.from(document.querySelectorAll(".carousel-button"));
 
 if (toggle && nav) {
   toggle.addEventListener("click", () => {
@@ -33,5 +36,46 @@ if (form && submitButton) {
   form.addEventListener("submit", () => {
     submitButton.disabled = true;
     submitButton.textContent = "문의 전송 중...";
+  });
+}
+
+if (carouselTrack && carouselDots.length) {
+  const slides = Array.from(carouselTrack.children);
+
+  const setActiveSlide = (index) => {
+    carouselDots.forEach((dot, dotIndex) => {
+      dot.classList.toggle("is-active", dotIndex === index);
+    });
+  };
+
+  const getSlideIndex = () => {
+    const slideWidth = slides[0] ? slides[0].getBoundingClientRect().width : 1;
+    const index = Math.round(carouselTrack.scrollLeft / slideWidth);
+    return Math.max(0, Math.min(index, slides.length - 1));
+  };
+
+  carouselDots.forEach((dot, index) => {
+    dot.addEventListener("click", () => {
+      slides[index].scrollIntoView({ behavior: "smooth", inline: "start", block: "nearest" });
+      setActiveSlide(index);
+    });
+  });
+
+  carouselButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const currentIndex = getSlideIndex();
+      const nextIndex = button.dataset.direction === "next"
+        ? Math.min(currentIndex + 1, slides.length - 1)
+        : Math.max(currentIndex - 1, 0);
+
+      slides[nextIndex].scrollIntoView({ behavior: "smooth", inline: "start", block: "nearest" });
+      setActiveSlide(nextIndex);
+    });
+  });
+
+  carouselTrack.addEventListener("scroll", () => {
+    window.requestAnimationFrame(() => {
+      setActiveSlide(getSlideIndex());
+    });
   });
 }
