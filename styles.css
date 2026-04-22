@@ -407,6 +407,19 @@ textarea {
   margin-bottom: 30px;
 }
 
+.logo-band .section-heading,
+.logo-band-grid,
+.value-band {
+  max-width: var(--max-width);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.logo-band .section-heading {
+  padding-left: 6px;
+  padding-right: 6px;
+}
+
 .section-heading h2,
 .value-band h2,
 .contact-copy h2 {
@@ -454,6 +467,8 @@ textarea {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 18px;
+  padding-left: 6px;
+  padding-right: 6px;
 }
 
 .logo-card {
@@ -572,7 +587,7 @@ textarea {
   grid-template-columns: 0.9fr 1.1fr;
   gap: 28px;
   align-items: center;
-  padding: var(--card-pad-lg);
+  padding: calc(var(--card-pad-lg) + 8px);
   border-radius: var(--radius-xl);
   background: var(--navy);
   color: var(--white);
@@ -736,6 +751,12 @@ textarea {
 
   .site-footer {
     flex-direction: column;
+  }
+
+  .logo-band .section-heading,
+  .logo-band-grid {
+    padding-left: 0;
+    padding-right: 0;
   }
 }
 
