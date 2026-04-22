@@ -289,32 +289,6 @@ textarea {
   object-fit: cover;
 }
 
-.visual-card-copy {
-  padding: var(--card-pad);
-}
-
-.visual-card-label {
-  margin: 0 0 10px;
-  color: var(--brand-strong);
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.visual-card h2 {
-  margin: 0;
-  font-size: 1.45rem;
-  font-weight: 700;
-  line-height: 1.35;
-}
-
-.visual-card p:last-child {
-  margin: 12px 0 0;
-  color: var(--ink-soft);
-  line-height: 1.75;
-}
-
 .carousel-controls,
 .carousel-buttons,
 .carousel-dots {
@@ -363,6 +337,29 @@ textarea {
 .carousel-button:hover,
 .carousel-dot:hover {
   border-color: var(--brand);
+}
+
+.carousel-caption {
+  display: grid;
+  gap: 6px;
+}
+
+.carousel-caption-title,
+.carousel-caption-address {
+  margin: 0;
+}
+
+.carousel-caption-title {
+  color: var(--ink);
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.55;
+}
+
+.carousel-caption-address {
+  color: rgba(81, 85, 106, 0.68);
+  font-size: 0.93rem;
+  line-height: 1.7;
 }
 
 .panel-card,
