@@ -589,6 +589,11 @@ textarea {
   align-items: start;
 }
 
+.operation-support-stack {
+  display: grid;
+  gap: 28px;
+}
+
 .support-carousel {
   width: 75%;
   justify-self: start;
@@ -596,13 +601,6 @@ textarea {
 
 .support-carousel .visual-card img {
   aspect-ratio: 4 / 5;
-}
-
-.equipment-gallery {
-  display: grid;
-  grid-template-columns: 0.82fr 1.18fr;
-  gap: 24px;
-  align-items: start;
 }
 
 .equipment-carousel {
@@ -947,7 +945,6 @@ textarea {
   .hero,
   .split,
   .operation-support,
-  .equipment-gallery,
   .contact-card {
     grid-template-columns: 1fr;
   }
