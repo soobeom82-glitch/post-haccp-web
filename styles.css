@@ -290,6 +290,38 @@ textarea {
   object-fit: cover;
 }
 
+.facility-card {
+  position: relative;
+  background: var(--bg-soft);
+}
+
+.facility-card img {
+  width: 100%;
+  height: 520px;
+  object-fit: contain;
+  background: var(--bg-soft);
+}
+
+.visual-card-caption {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  left: 16px;
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  padding: 0 18px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 18px;
+  background: rgba(20, 25, 32, 0.24);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  color: var(--white);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
 .carousel-controls,
 .carousel-buttons,
 .carousel-dots {
@@ -589,34 +621,9 @@ textarea {
   align-items: start;
 }
 
-.operation-support-stack {
-  display: grid;
-  gap: 28px;
-}
-
-.support-carousel {
+.facility-carousel {
   width: 75%;
   justify-self: start;
-}
-
-.support-carousel .visual-card img {
-  aspect-ratio: 4 / 5;
-}
-
-.equipment-carousel {
-  width: 75%;
-  justify-self: start;
-}
-
-.equipment-carousel .visual-card {
-  background: var(--bg-soft);
-}
-
-.equipment-carousel .visual-card img {
-  width: 100%;
-  height: 520px;
-  object-fit: contain;
-  background: var(--bg-soft);
 }
 
 .problem-card,
@@ -949,11 +956,7 @@ textarea {
     grid-template-columns: 1fr;
   }
 
-  .support-carousel {
-    width: 100%;
-  }
-
-  .equipment-carousel {
+  .facility-carousel {
     width: 100%;
   }
 
@@ -1062,5 +1065,9 @@ textarea {
     min-height: 52px;
     padding: 0 18px;
     font-size: 0.92rem;
+  }
+
+  .facility-card img {
+    height: 420px;
   }
 }
