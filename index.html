@@ -579,28 +579,28 @@
             <input type="hidden" name="_next" value="./thanks.html">
             <input type="text" name="_honey" class="honeypot" tabindex="-1" autocomplete="off">
             <label>
-              회사명
-              <input type="text" name="company" placeholder="예: OO푸드랩" required>
+              <span class="field-label">회사명 <span class="field-meta">선택</span></span>
+              <input type="text" name="company" placeholder="예: OO푸드랩">
             </label>
             <label>
-              담당자명
-              <input type="text" name="name" placeholder="예: 홍길동" required>
+              <span class="field-label">담당자명 <span class="field-meta">선택</span></span>
+              <input type="text" name="name" placeholder="예: 홍길동">
             </label>
             <label>
-              연락처
+              <span class="field-label">연락처 <span class="field-meta is-required">필수</span></span>
               <input type="tel" name="phone" placeholder="예: 010-1234-5678" required>
             </label>
             <label>
-              이메일
-              <input type="email" name="email" placeholder="예: hello@company.com" required>
+              <span class="field-label">이메일 <span class="field-meta">선택</span></span>
+              <input type="email" name="email" placeholder="예: hello@company.com">
             </label>
             <label>
-              생산 예정 품목
-              <input type="text" name="product" placeholder="예: 소스 / 디저트 / 반찬류" required>
+              <span class="field-label">생산 예정 품목 <span class="field-meta">선택</span></span>
+              <input type="text" name="product" placeholder="예: 소스 / 디저트 / 반찬류">
             </label>
             <label>
-              현재 사업 단계
-              <select name="stage" required>
+              <span class="field-label">현재 사업 단계 <span class="field-meta">선택</span></span>
+              <select name="stage">
                 <option>아이디어 단계</option>
                 <option>시제품 준비 중</option>
                 <option>판매 중 / 제조 전환 검토</option>
@@ -608,23 +608,23 @@
               </select>
             </label>
             <label>
-              HACCP 인증 필요 여부
-              <select name="need" required>
+              <span class="field-label">HACCP 인증 필요 여부 <span class="field-meta">선택</span></span>
+              <select name="need">
                 <option>필요</option>
                 <option>검토 중</option>
                 <option>아직 미정</option>
               </select>
             </label>
             <div class="branch-checklist full" role="group" aria-labelledby="branch-interest-label">
-              <p id="branch-interest-label" class="branch-checklist-title">관심 지점 (복수 선택 가능)</p>
+              <p id="branch-interest-label" class="branch-checklist-title">관심 지점 (복수 선택 가능) <span class="field-meta">선택</span></p>
               <div class="branch-checklist-options">
                 <label><input type="checkbox" name="interest_branches" value="광교점"> 광교점</label>
                 <label><input type="checkbox" name="interest_branches" value="구리점"> 구리점</label>
               </div>
             </div>
             <label class="full">
-              희망 상담 내용
-              <textarea name="message" rows="4" placeholder="입점 희망 시기, 품목, 궁금한 점을 남겨주세요." required></textarea>
+              <span class="field-label">희망 상담 내용 <span class="field-meta">선택</span></span>
+              <textarea name="message" rows="4" placeholder="입점 희망 시기, 품목, 궁금한 점을 남겨주세요."></textarea>
             </label>
             <button class="button button-primary full" type="submit">상담 문의 남기기</button>
             <p class="form-note">

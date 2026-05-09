@@ -940,6 +940,23 @@ textarea {
   font-weight: 600;
 }
 
+.field-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.field-meta {
+  color: var(--ink-soft);
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.field-meta.is-required {
+  color: var(--brand-strong);
+}
+
 .branch-checklist {
   display: grid;
   gap: 16px;
