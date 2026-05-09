@@ -659,10 +659,69 @@ textarea {
   line-height: 1.8;
 }
 
+.branch-grid,
 .search-entry-grid,
 .detail-grid {
   display: grid;
   gap: 18px;
+}
+
+.branch-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.branch-card {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-xl);
+  background: var(--white);
+  box-shadow: var(--shadow);
+}
+
+.branch-card img {
+  width: 100%;
+  aspect-ratio: 1.16 / 0.8;
+  object-fit: cover;
+}
+
+.branch-card-copy {
+  display: grid;
+  gap: 14px;
+  padding: var(--card-pad);
+}
+
+.branch-card-label {
+  margin: 0;
+  color: var(--brand-strong);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.branch-card-copy h3 {
+  margin: 0;
+  font-size: 1.5rem;
+  line-height: 1.32;
+}
+
+.branch-card-copy p {
+  margin: 0;
+  color: var(--ink-soft);
+  line-height: 1.75;
+}
+
+.branch-card .button {
+  justify-self: start;
+  margin-top: 4px;
+}
+
+.branch-card-meta {
+  font-size: 0.93rem;
+}
+
+.branch-showcase {
+  padding-top: 0;
 }
 
 .search-entry-grid {
@@ -845,6 +904,38 @@ textarea {
   font-weight: 600;
 }
 
+.branch-checklist {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px 16px;
+  margin: 0;
+  padding: 20px;
+  border: 1px solid var(--line-strong);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.82);
+}
+
+.branch-checklist legend {
+  padding: 0 8px;
+  color: var(--ink);
+  font-size: 0.94rem;
+  font-weight: 700;
+}
+
+.branch-checklist label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.94rem;
+  font-weight: 500;
+}
+
+.branch-checklist input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--brand);
+}
+
 .contact-form input,
 .contact-form select,
 .contact-form textarea {
@@ -991,6 +1082,7 @@ textarea {
 
   .problem-grid,
   .solution-grid,
+  .branch-grid,
   .search-entry-grid,
   .fit-grid,
   .detail-grid,
@@ -1020,6 +1112,10 @@ textarea {
 
   .card-illustrated {
     padding-right: 80px;
+  }
+
+  .branch-checklist {
+    grid-template-columns: 1fr;
   }
 
 }
