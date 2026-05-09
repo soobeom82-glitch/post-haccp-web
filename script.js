@@ -41,6 +41,8 @@ carousels.forEach((carousel) => {
   const carouselTrack = carousel.querySelector(".carousel-track");
   const carouselDots = Array.from(carousel.querySelectorAll(".carousel-dot"));
   const carouselButtons = Array.from(carousel.querySelectorAll(".carousel-button"));
+  const captionTitle = carousel.querySelector(".carousel-caption-title");
+  const captionAddress = carousel.querySelector(".carousel-caption-address");
 
   if (!carouselTrack || !carouselDots.length) {
     return;
@@ -48,10 +50,27 @@ carousels.forEach((carousel) => {
 
   const slides = Array.from(carouselTrack.children);
 
+  const syncCaption = (index) => {
+    const activeSlide = slides[index];
+
+    if (!activeSlide) {
+      return;
+    }
+
+    if (captionTitle && activeSlide.dataset.captionTitle) {
+      captionTitle.textContent = activeSlide.dataset.captionTitle;
+    }
+
+    if (captionAddress && activeSlide.dataset.captionAddress) {
+      captionAddress.textContent = activeSlide.dataset.captionAddress;
+    }
+  };
+
   const setActiveSlide = (index) => {
     carouselDots.forEach((dot, dotIndex) => {
       dot.classList.toggle("is-active", dotIndex === index);
     });
+    syncCaption(index);
   };
 
   const getSlideIndex = () => {
@@ -84,4 +103,6 @@ carousels.forEach((carousel) => {
       setActiveSlide(getSlideIndex());
     });
   });
+
+  setActiveSlide(0);
 });
