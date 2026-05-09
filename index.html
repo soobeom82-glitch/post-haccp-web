@@ -89,8 +89,7 @@
           <p class="eyebrow">POST HACCP</p>
           <h1>식품 제조 창업과 HACCP 준비를 더 현실적으로 시작하세요</h1>
           <p class="hero-text">
-            포스트공공해썹은 광교점과 구리점 등 운영 지점의 마케팅과 입점 상담을 총괄하며,
-            HACCP 기반 공유형 제조시설과 운영 지원 체계를 바탕으로
+            포스트공공해썹은 HACCP 기반 공유형 제조시설과 운영 지원 체계를 바탕으로
             중소 식품업체와 브랜드가 제조를 시작하고 인증을 준비할 수 있도록 돕습니다.
           </p>
           <div class="hero-actions">
@@ -208,12 +207,8 @@
         <div class="section-heading split">
           <div>
             <p class="eyebrow">CURRENT BRANCHES</p>
-            <h2>현재 운영 중인 지점은 광교점과 구리점입니다</h2>
+            <h2>운영 지점 상세</h2>
           </div>
-          <p>
-            포스트공공해썹은 현재 광교점과 구리점의 마케팅과 입점 상담을 총괄하고 있으며,
-            이후 추가 지점도 같은 구조로 확장될 수 있도록 구성하고 있습니다.
-          </p>
         </div>
         <div class="branch-grid">
           <article class="branch-card">
@@ -272,61 +267,148 @@
       </section>
 
       <section class="section operation-support">
-        <div class="operation-support-copy">
-          <p class="eyebrow">GWANGGYO FACILITY</p>
+        <div class="section-heading split">
+          <div>
+            <p class="eyebrow">BRANCH FACILITY</p>
+            <h2>지점별 시설 안내</h2>
+          </div>
+          <p>
+            광교점과 구리점의 주요 공간 구성을 지점별로 나눠 확인할 수 있습니다.
+            관심 있는 지점을 선택해 시설 사진을 먼저 살펴보세요.
+          </p>
         </div>
-        <section class="hero-carousel facility-carousel" data-carousel aria-label="운영 공간과 설비 이미지">
-          <div class="carousel-track" id="facility-track" tabindex="0">
-            <article class="visual-card facility-card">
-              <img src="./assets/operation-support-1.jpeg" alt="세척 공간과 생산실 복도 입구">
-              <div class="visual-card-caption">위생전실</div>
-            </article>
-            <article class="visual-card facility-card">
-              <img src="./assets/operation-support-2.jpeg" alt="운영 거점 내부 복도">
-              <div class="visual-card-caption">생산실 복도</div>
-            </article>
-            <article class="visual-card facility-card">
-              <img src="./assets/operation-support-3.jpeg" alt="공용 세척 공간">
-              <div class="visual-card-caption">습식 전처리실</div>
-            </article>
-            <article class="visual-card facility-card">
-              <img src="./assets/equipment-1.jpeg" alt="광교 거점 설비 구역 입구">
-              <div class="visual-card-caption">생산실 내부 (7.8평)</div>
-            </article>
-            <article class="visual-card facility-card">
-              <img src="./assets/equipment-2.jpeg" alt="광교 거점 출입 전실">
-              <div class="visual-card-caption">냉동 냉장 창고</div>
-            </article>
-            <article class="visual-card facility-card">
-              <img src="./assets/equipment-3.jpeg" alt="광교 거점 개인 보관함 구역">
-              <div class="visual-card-caption">탈의실</div>
-            </article>
-            <article class="visual-card facility-card">
-              <img src="./assets/equipment-4.jpeg" alt="광교 거점 냉동창고와 냉장창고">
-              <div class="visual-card-caption">출입구</div>
-            </article>
-            <article class="visual-card facility-card">
-              <img src="./assets/equipment-5.jpeg" alt="광교 거점 세척 설비와 작업 공간">
-              <div class="visual-card-caption">주출입구</div>
-            </article>
-          </div>
-          <div class="carousel-controls">
-            <div class="carousel-dots" aria-label="운영 공간과 설비 이미지 선택">
-              <button class="carousel-dot is-active" type="button" aria-label="첫 번째 이미지 보기"></button>
-              <button class="carousel-dot" type="button" aria-label="두 번째 이미지 보기"></button>
-              <button class="carousel-dot" type="button" aria-label="세 번째 이미지 보기"></button>
-              <button class="carousel-dot" type="button" aria-label="네 번째 이미지 보기"></button>
-              <button class="carousel-dot" type="button" aria-label="다섯 번째 이미지 보기"></button>
-              <button class="carousel-dot" type="button" aria-label="여섯 번째 이미지 보기"></button>
-              <button class="carousel-dot" type="button" aria-label="일곱 번째 이미지 보기"></button>
-              <button class="carousel-dot" type="button" aria-label="여덟 번째 이미지 보기"></button>
-            </div>
-            <div class="carousel-buttons">
-              <button class="carousel-button" type="button" data-direction="prev" aria-controls="facility-track">이전</button>
-              <button class="carousel-button" type="button" data-direction="next" aria-controls="facility-track">다음</button>
-            </div>
-          </div>
-        </section>
+        <div class="branch-facility-tabs" role="tablist" aria-label="지점별 시설 탭">
+          <button
+            class="branch-facility-tab is-active"
+            type="button"
+            role="tab"
+            aria-selected="true"
+            aria-controls="branch-panel-gwanggyo"
+            id="branch-tab-gwanggyo"
+            data-branch-tab="gwanggyo"
+          >
+            광교점
+          </button>
+          <button
+            class="branch-facility-tab"
+            type="button"
+            role="tab"
+            aria-selected="false"
+            aria-controls="branch-panel-guri"
+            id="branch-tab-guri"
+            data-branch-tab="guri"
+          >
+            구리점
+          </button>
+        </div>
+        <div class="branch-facility-panels">
+          <section
+            class="branch-facility-panel is-active"
+            id="branch-panel-gwanggyo"
+            role="tabpanel"
+            aria-labelledby="branch-tab-gwanggyo"
+            data-branch-panel="gwanggyo"
+          >
+            <section class="hero-carousel facility-carousel" data-carousel aria-label="광교점 시설 이미지">
+              <div class="carousel-track" id="facility-track-gwanggyo" tabindex="0">
+                <article class="visual-card facility-card">
+                  <img src="./assets/operation-support-1.jpeg" alt="광교점 세척 공간과 생산실 복도 입구">
+                  <div class="visual-card-caption">위생전실</div>
+                </article>
+                <article class="visual-card facility-card">
+                  <img src="./assets/operation-support-2.jpeg" alt="광교점 내부 복도">
+                  <div class="visual-card-caption">생산실 복도</div>
+                </article>
+                <article class="visual-card facility-card">
+                  <img src="./assets/operation-support-3.jpeg" alt="광교점 공용 세척 공간">
+                  <div class="visual-card-caption">습식 전처리실</div>
+                </article>
+                <article class="visual-card facility-card">
+                  <img src="./assets/equipment-1.jpeg" alt="광교점 생산실 내부">
+                  <div class="visual-card-caption">생산실 내부 (7.8평)</div>
+                </article>
+                <article class="visual-card facility-card">
+                  <img src="./assets/equipment-2.jpeg" alt="광교점 냉동 냉장 창고">
+                  <div class="visual-card-caption">냉동 냉장 창고</div>
+                </article>
+                <article class="visual-card facility-card">
+                  <img src="./assets/equipment-3.jpeg" alt="광교점 탈의실">
+                  <div class="visual-card-caption">탈의실</div>
+                </article>
+                <article class="visual-card facility-card">
+                  <img src="./assets/equipment-4.jpeg" alt="광교점 출입구">
+                  <div class="visual-card-caption">출입구</div>
+                </article>
+                <article class="visual-card facility-card">
+                  <img src="./assets/equipment-5.jpeg" alt="광교점 주출입구">
+                  <div class="visual-card-caption">주출입구</div>
+                </article>
+              </div>
+              <div class="carousel-controls">
+                <div class="carousel-dots" aria-label="광교점 시설 이미지 선택">
+                  <button class="carousel-dot is-active" type="button" aria-label="광교점 첫 번째 이미지 보기"></button>
+                  <button class="carousel-dot" type="button" aria-label="광교점 두 번째 이미지 보기"></button>
+                  <button class="carousel-dot" type="button" aria-label="광교점 세 번째 이미지 보기"></button>
+                  <button class="carousel-dot" type="button" aria-label="광교점 네 번째 이미지 보기"></button>
+                  <button class="carousel-dot" type="button" aria-label="광교점 다섯 번째 이미지 보기"></button>
+                  <button class="carousel-dot" type="button" aria-label="광교점 여섯 번째 이미지 보기"></button>
+                  <button class="carousel-dot" type="button" aria-label="광교점 일곱 번째 이미지 보기"></button>
+                  <button class="carousel-dot" type="button" aria-label="광교점 여덟 번째 이미지 보기"></button>
+                </div>
+                <div class="carousel-buttons">
+                  <button class="carousel-button" type="button" data-direction="prev" aria-controls="facility-track-gwanggyo">이전</button>
+                  <button class="carousel-button" type="button" data-direction="next" aria-controls="facility-track-gwanggyo">다음</button>
+                </div>
+              </div>
+            </section>
+          </section>
+          <section
+            class="branch-facility-panel"
+            id="branch-panel-guri"
+            role="tabpanel"
+            aria-labelledby="branch-tab-guri"
+            data-branch-panel="guri"
+            hidden
+          >
+            <section class="hero-carousel facility-carousel" data-carousel aria-label="구리점 시설 이미지">
+              <div class="carousel-track" id="facility-track-guri" tabindex="0">
+                <article class="visual-card facility-card">
+                  <img src="./assets/guri-facility-1.jpeg" alt="구리점 주출입구">
+                  <div class="visual-card-caption">주출입구</div>
+                </article>
+                <article class="visual-card facility-card">
+                  <img src="./assets/guri-facility-2.jpeg" alt="구리점 냉동창고">
+                  <div class="visual-card-caption">냉동창고</div>
+                </article>
+                <article class="visual-card facility-card">
+                  <img src="./assets/guri-facility-3.jpeg" alt="구리점 냉동창고 내부">
+                  <div class="visual-card-caption">냉동창고 내부</div>
+                </article>
+                <article class="visual-card facility-card">
+                  <img src="./assets/guri-facility-4.jpeg" alt="구리점 생산실 복도">
+                  <div class="visual-card-caption">생산실 복도</div>
+                </article>
+                <article class="visual-card facility-card">
+                  <img src="./assets/guri-facility-5.jpeg" alt="구리점 생산실">
+                  <div class="visual-card-caption">생산실</div>
+                </article>
+              </div>
+              <div class="carousel-controls">
+                <div class="carousel-dots" aria-label="구리점 시설 이미지 선택">
+                  <button class="carousel-dot is-active" type="button" aria-label="구리점 첫 번째 이미지 보기"></button>
+                  <button class="carousel-dot" type="button" aria-label="구리점 두 번째 이미지 보기"></button>
+                  <button class="carousel-dot" type="button" aria-label="구리점 세 번째 이미지 보기"></button>
+                  <button class="carousel-dot" type="button" aria-label="구리점 네 번째 이미지 보기"></button>
+                  <button class="carousel-dot" type="button" aria-label="구리점 다섯 번째 이미지 보기"></button>
+                </div>
+                <div class="carousel-buttons">
+                  <button class="carousel-button" type="button" data-direction="prev" aria-controls="facility-track-guri">이전</button>
+                  <button class="carousel-button" type="button" data-direction="next" aria-controls="facility-track-guri">다음</button>
+                </div>
+              </div>
+            </section>
+          </section>
+        </div>
       </section>
 
       <section id="services" class="section services">
@@ -363,22 +445,22 @@
       <section class="section search-entry">
         <div class="search-entry-grid">
           <article class="search-entry-card">
-            <p class="search-entry-label">광교 HACCP 공유시설</p>
-            <h3>광교 거점과 공유형 제조시설을 먼저 확인하고 싶은 경우</h3>
-            <p>운영 거점, 공간 특징, 광교 기반 상담 흐름을 중심으로 정리한 페이지입니다.</p>
-            <a class="button button-secondary" href="./gwanggyo-haccp-facility.html">페이지 보기</a>
+            <p class="search-entry-label">광교점 상세</p>
+            <h3>광교점 운영 지점 안내</h3>
+            <p>광교점 조감도, 공유형 제조시설, 상담 흐름을 중심으로 정리한 페이지입니다.</p>
+            <a class="button button-secondary" href="./gwanggyo-haccp-facility.html">상세 보기</a>
           </article>
           <article class="search-entry-card">
-            <p class="search-entry-label">구리점 시설 안내</p>
-            <h3>구리점 조감도와 시설 구성을 먼저 확인하고 싶은 경우</h3>
-            <p>구리점 기본 정보, 건물 개요, 냉장·냉동 설비와 생산실 구성을 중심으로 정리한 페이지입니다.</p>
-            <a class="button button-secondary" href="./guri-branch.html">페이지 보기</a>
+            <p class="search-entry-label">구리점 상세</p>
+            <h3>구리점 운영 지점 안내</h3>
+            <p>구리점 조감도, 시설 구성, 기본 정보를 중심으로 정리한 페이지입니다.</p>
+            <a class="button button-secondary" href="./guri-branch.html">상세 보기</a>
           </article>
           <article class="search-entry-card">
             <p class="search-entry-label">HACCP 인증 준비 지원</p>
-            <h3>인증을 어떻게 준비해야 하는지 먼저 알고 싶은 경우</h3>
-            <p>포스트공공해썹의 준비 지원 범위와 전문 행정사 협업 구조를 중심으로 안내합니다.</p>
-            <a class="button button-secondary" href="./haccp-preparation-support.html">페이지 보기</a>
+            <h3>HACCP 준비 지원 안내</h3>
+            <p>인증 준비 순서와 전문 행정사 협업 구조를 중심으로 정리한 페이지입니다.</p>
+            <a class="button button-secondary" href="./haccp-preparation-support.html">상세 보기</a>
           </article>
         </div>
       </section>
@@ -555,11 +637,23 @@
       <div class="footer-brand">
         <img class="footer-logo" src="./assets/brand-symbol.png" alt="포스트공공해썹 심볼 로고">
       </div>
-      <div class="footer-info">
+      <div class="footer-company">
         <p>포스트 공공해썹</p>
-        <p>주소 : 경기도 수원시 영통구 매영로 159번길 19, 3층 302~306호 (원천동)</p>
-        <p>사업자 등록번호 : 427-52-00975</p>
-        <p>E-mail : <a href="mailto:0x00@kakao.com">0x00@kakao.com</a></p>
+      </div>
+      <div class="footer-branches">
+        <section class="footer-branch">
+          <p class="footer-branch-name">광교점</p>
+          <p>주소 : 경기도 수원시 영통구 매영로 159번길 19, 3층 302~306호 (원천동)</p>
+          <p>사업자 등록번호 : 427-52-00975</p>
+          <p>E-mail : <a href="mailto:0x00@kakao.com">0x00@kakao.com</a></p>
+        </section>
+        <section class="footer-branch">
+          <p class="footer-branch-name">구리점</p>
+          <p>업체명 : 해썹코퍼레이션 (구리점)</p>
+          <p>주소 : 경기도 구리시 갈매순환로166번길46, 지식산업센터동 비2층 4,5,6,7호 (갈매동, 금강펜테리움IX타워 지식산업센터)</p>
+          <p>연락처 : <a href="tel:01033360840">010-3336-0840</a></p>
+          <p>E-mail : <a href="mailto:ty0001@naver.com">ty0001@naver.com</a></p>
+        </section>
       </div>
       <p class="footer-copy">Copyright 2026 포스트 공공해썹 All Rights Reserved.</p>
     </footer>

@@ -5,6 +5,8 @@ const form = document.querySelector(".contact-form");
 const nextInput = document.querySelector('input[name="_next"]');
 const submitButton = form ? form.querySelector('button[type="submit"]') : null;
 const carousels = Array.from(document.querySelectorAll("[data-carousel]"));
+const branchTabs = Array.from(document.querySelectorAll("[data-branch-tab]"));
+const branchPanels = Array.from(document.querySelectorAll("[data-branch-panel]"));
 
 if (toggle && nav) {
   toggle.addEventListener("click", () => {
@@ -34,6 +36,28 @@ if (form && submitButton) {
   form.addEventListener("submit", () => {
     submitButton.disabled = true;
     submitButton.textContent = "문의 전송 중...";
+  });
+}
+
+if (branchTabs.length && branchPanels.length) {
+  const setActiveBranch = (branchId) => {
+    branchTabs.forEach((tabButton) => {
+      const isActive = tabButton.dataset.branchTab === branchId;
+      tabButton.classList.toggle("is-active", isActive);
+      tabButton.setAttribute("aria-selected", String(isActive));
+    });
+
+    branchPanels.forEach((panel) => {
+      const isActive = panel.dataset.branchPanel === branchId;
+      panel.classList.toggle("is-active", isActive);
+      panel.hidden = !isActive;
+    });
+  };
+
+  branchTabs.forEach((tabButton) => {
+    tabButton.addEventListener("click", () => {
+      setActiveBranch(tabButton.dataset.branchTab);
+    });
   });
 }
 

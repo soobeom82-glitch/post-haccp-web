@@ -616,14 +616,50 @@ textarea {
 
 .operation-support {
   display: grid;
-  grid-template-columns: 0.82fr 1.18fr;
   gap: 24px;
-  align-items: start;
 }
 
 .facility-carousel {
-  width: 75%;
-  justify-self: start;
+  width: 100%;
+}
+
+.branch-facility-tabs {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.branch-facility-tab {
+  min-height: 48px;
+  padding: 0 18px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--white);
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 160ms ease, background-color 160ms ease, color 160ms ease;
+}
+
+.branch-facility-tab.is-active {
+  border-color: rgba(37, 188, 189, 0.28);
+  background: rgba(37, 188, 189, 0.1);
+  color: var(--brand-strong);
+}
+
+.branch-facility-tab:hover {
+  border-color: var(--brand);
+  color: var(--ink);
+}
+
+.branch-facility-panels {
+  display: grid;
+}
+
+.branch-facility-panel {
+  min-width: 0;
 }
 
 .problem-card,
@@ -990,22 +1026,43 @@ textarea {
   flex: 0 0 auto;
 }
 
-.footer-info {
+.footer-company,
+.footer-branches {
   display: grid;
   gap: 4px;
 }
 
-.footer-info p,
+.footer-company p,
+.footer-branches p,
 .footer-copy {
   margin: 0;
 }
 
-.footer-info p:first-child {
+.footer-company p:first-child {
   color: var(--ink);
   font-weight: 700;
 }
 
-.footer-info a {
+.footer-branches {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.footer-branch {
+  display: grid;
+  gap: 4px;
+  padding: 20px 22px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: var(--bg-soft);
+}
+
+.footer-branch-name {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.footer-branches a {
   color: var(--ink-soft);
 }
 
@@ -1042,7 +1099,6 @@ textarea {
 @media (max-width: 1024px) {
   .hero,
   .split,
-  .operation-support,
   .contact-card {
     grid-template-columns: 1fr;
   }
@@ -1095,6 +1151,10 @@ textarea {
 
   .topbar {
     align-items: flex-start;
+  }
+
+  .footer-branches {
+    grid-template-columns: 1fr;
   }
 
   .site-footer {
