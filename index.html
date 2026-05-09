@@ -615,11 +615,13 @@
                 <option>아직 미정</option>
               </select>
             </label>
-            <fieldset class="branch-checklist full">
-              <legend>관심 지점 (복수 선택 가능)</legend>
-              <label><input type="checkbox" name="interest_branches" value="광교점"> 광교점</label>
-              <label><input type="checkbox" name="interest_branches" value="구리점"> 구리점</label>
-            </fieldset>
+            <div class="branch-checklist full" role="group" aria-labelledby="branch-interest-label">
+              <p id="branch-interest-label" class="branch-checklist-title">관심 지점 (복수 선택 가능)</p>
+              <div class="branch-checklist-options">
+                <label><input type="checkbox" name="interest_branches" value="광교점"> 광교점</label>
+                <label><input type="checkbox" name="interest_branches" value="구리점"> 구리점</label>
+              </div>
+            </div>
             <label class="full">
               희망 상담 내용
               <textarea name="message" rows="4" placeholder="입점 희망 시기, 품목, 궁금한 점을 남겨주세요." required></textarea>

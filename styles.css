@@ -942,8 +942,7 @@ textarea {
 
 .branch-checklist {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px 16px;
+  gap: 16px;
   margin: 0;
   padding: 20px;
   border: 1px solid var(--line-strong);
@@ -951,11 +950,17 @@ textarea {
   background: rgba(255, 255, 255, 0.82);
 }
 
-.branch-checklist legend {
-  padding: 0 8px;
+.branch-checklist-title {
+  margin: 0;
   color: var(--ink);
   font-size: 0.94rem;
   font-weight: 700;
+}
+
+.branch-checklist-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px 16px;
 }
 
 .branch-checklist label {
@@ -1175,6 +1180,10 @@ textarea {
   }
 
   .branch-checklist {
+    gap: 14px;
+  }
+
+  .branch-checklist-options {
     grid-template-columns: 1fr;
   }
 
