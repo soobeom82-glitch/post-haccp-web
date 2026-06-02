@@ -715,6 +715,15 @@ textarea {
   box-shadow: 0 24px 60px rgba(20, 25, 32, 0.16);
 }
 
+.promo-highlight-link {
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.promo-highlight-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 30px 70px rgba(20, 25, 32, 0.2);
+}
+
 .promo-highlight-visual img {
   width: 100%;
   aspect-ratio: 1 / 1;
