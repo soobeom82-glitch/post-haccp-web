@@ -127,6 +127,42 @@ textarea {
   background: var(--white);
 }
 
+.topbar-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  flex: 0 0 auto;
+}
+
+.header-phone {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  min-height: 52px;
+  padding: 10px 16px;
+  border: 1px solid rgba(37, 188, 189, 0.22);
+  border-radius: 16px;
+  background: linear-gradient(180deg, #f7ffff 0%, #eefbfb 100%);
+  box-shadow: 0 12px 24px rgba(37, 188, 189, 0.12);
+  line-height: 1.15;
+}
+
+.header-phone span {
+  color: var(--brand-strong);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.header-phone strong {
+  margin-top: 4px;
+  color: var(--ink);
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
 .menu-toggle {
   display: none;
   border: 1px solid var(--line);
@@ -198,6 +234,50 @@ textarea {
   gap: 12px;
   margin: 34px 0 24px;
   flex-wrap: wrap;
+}
+
+.hero-phone-strip {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 14px;
+  align-items: center;
+  margin: 0 0 24px;
+}
+
+.hero-phone-card {
+  display: grid;
+  gap: 4px;
+  min-width: 240px;
+  padding: 16px 18px;
+  border: 1px solid rgba(37, 188, 189, 0.22);
+  border-radius: 18px;
+  background: linear-gradient(180deg, #f7ffff 0%, #eefbfb 100%);
+  box-shadow: 0 14px 28px rgba(37, 188, 189, 0.14);
+}
+
+.hero-phone-card span {
+  color: var(--brand-strong);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.hero-phone-card strong {
+  color: var(--ink);
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.contact-phone-card {
+  min-width: 0;
+}
+
+.hero-phone-strip p {
+  margin: 0;
+  color: var(--ink-soft);
+  line-height: 1.7;
 }
 
 .button {
@@ -1198,25 +1278,45 @@ textarea {
   font-size: 0.9rem;
 }
 
-.floating-contact {
+.floating-actions {
   position: fixed;
   right: 28px;
   bottom: 28px;
   z-index: 40;
+  display: grid;
+  gap: 10px;
+}
+
+.floating-call,
+.floating-contact {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   min-height: 56px;
   padding: 0 22px;
-  border: 1px solid rgba(19, 163, 164, 0.18);
   border-radius: 999px;
-  background: rgba(37, 188, 189, 0.96);
-  box-shadow: 0 18px 34px rgba(37, 188, 189, 0.22);
-  color: var(--white);
   font-size: 0.96rem;
   font-weight: 700;
   letter-spacing: -0.01em;
   backdrop-filter: blur(8px);
+}
+
+.floating-call {
+  border: 1px solid rgba(19, 163, 164, 0.2);
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 16px 30px rgba(33, 43, 54, 0.1);
+  color: var(--ink);
+}
+
+.floating-contact {
+  border: 1px solid rgba(19, 163, 164, 0.18);
+  background: rgba(37, 188, 189, 0.96);
+  box-shadow: 0 18px 34px rgba(37, 188, 189, 0.22);
+  color: var(--white);
+}
+
+.floating-call:hover {
+  border-color: var(--brand);
 }
 
 .floating-contact:hover {
@@ -1279,6 +1379,27 @@ textarea {
 
   .topbar {
     align-items: flex-start;
+  }
+
+  .topbar-actions {
+    margin-left: auto;
+  }
+
+  .header-phone {
+    min-height: 48px;
+    padding: 9px 14px;
+  }
+
+  .header-phone strong {
+    font-size: 0.92rem;
+  }
+
+  .hero-phone-strip {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-phone-card {
+    min-width: 0;
   }
 
   .promo-highlight-shell {
@@ -1363,9 +1484,15 @@ textarea {
     padding-bottom: 94px;
   }
 
-  .floating-contact {
+  .floating-actions {
     right: 16px;
     bottom: 16px;
+    left: 16px;
+  }
+
+  .floating-call,
+  .floating-contact {
+    width: 100%;
     min-height: 52px;
     padding: 0 18px;
     font-size: 0.92rem;
