@@ -4,6 +4,8 @@ const year = document.querySelector("#year");
 const carousels = Array.from(document.querySelectorAll("[data-carousel]"));
 const branchTabs = Array.from(document.querySelectorAll("[data-branch-tab]"));
 const branchPanels = Array.from(document.querySelectorAll("[data-branch-panel]"));
+const contactForm = document.querySelector("#contact-form");
+const contactFormStatus = document.querySelector("#contact-form-status");
 
 if (toggle && nav) {
   toggle.addEventListener("click", () => {
@@ -115,3 +117,68 @@ carousels.forEach((carousel) => {
 
   setActiveSlide(0);
 });
+
+if (contactForm && contactFormStatus) {
+  const submitButton = contactForm.querySelector('button[type="submit"]');
+
+  const setFormStatus = (message, isError = false) => {
+    contactFormStatus.textContent = message;
+    contactFormStatus.classList.toggle("is-error", isError);
+  };
+
+  contactForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const formData = new FormData(contactForm);
+    const phone = String(formData.get("phone") || "").trim();
+
+    if (!phone) {
+      setFormStatus("연락처를 입력해주세요.", true);
+      return;
+    }
+
+    const payload = {
+      company: String(formData.get("company") || "").trim(),
+      name: String(formData.get("name") || "").trim(),
+      phone,
+      email: String(formData.get("email") || "").trim(),
+      product: String(formData.get("product") || "").trim(),
+      stage: String(formData.get("stage") || "").trim(),
+      haccpNeed: String(formData.get("haccp_need") || "").trim(),
+      branches: formData.getAll("branches").map((value) => String(value).trim()).filter(Boolean),
+      message: String(formData.get("message") || "").trim(),
+      website: String(formData.get("website") || "").trim()
+    };
+
+    setFormStatus("상담 내용을 전송하고 있습니다...");
+
+    if (submitButton) {
+      submitButton.disabled = true;
+    }
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      });
+
+      const result = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        throw new Error(result.message || "전송에 실패했습니다.");
+      }
+
+      contactForm.reset();
+      setFormStatus("상담 접수가 완료되었습니다. 확인 후 연락드리겠습니다.");
+    } catch (error) {
+      setFormStatus(error instanceof Error ? error.message : "전송 중 문제가 발생했습니다.", true);
+    } finally {
+      if (submitButton) {
+        submitButton.disabled = false;
+      }
+    }
+  });
+}
