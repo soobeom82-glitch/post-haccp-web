@@ -227,6 +227,26 @@ textarea {
   letter-spacing: -0.02em;
 }
 
+.event-support-copy {
+  display: grid;
+  gap: 8px;
+  margin: 0 0 22px;
+  padding-left: 4px;
+}
+
+.event-support-copy p {
+  margin: 0;
+  color: var(--ink);
+  font-size: 1.02rem;
+  font-weight: 700;
+  line-height: 1.7;
+  letter-spacing: -0.02em;
+}
+
+.event-support-copy p:last-child {
+  color: var(--brand-strong);
+}
+
 .hero h1,
 .section h2,
 .value-band h2,
