@@ -1,3 +1,6 @@
+const { kvHashIncrement } = require("./_lib/kv");
+const { formatDate, getMonthKey, startOfWeek } = require("./_lib/time");
+
 module.exports = async (req, res) => {
   res.setHeader("Content-Type", "application/json; charset=utf-8");
 
@@ -8,12 +11,9 @@ module.exports = async (req, res) => {
     return;
   }
 
-  const botToken = process.env.TELEGRAM_BOT_TOKEN;
-  const chatId = process.env.TELEGRAM_CHAT_ID;
-
-  if (!botToken || !chatId) {
+  if (!process.env.KV_REST_API_URL || !process.env.KV_REST_API_TOKEN) {
     res.statusCode = 500;
-    res.end(JSON.stringify({ message: "텔레그램 연동 설정이 아직 완료되지 않았습니다." }));
+    res.end(JSON.stringify({ message: "방문 집계 저장소 설정이 아직 완료되지 않았습니다." }));
     return;
   }
 
@@ -30,59 +30,22 @@ module.exports = async (req, res) => {
   }
 
   const payload = body && typeof body === "object" ? body : {};
-  const path = String(payload.path || "/").trim() || "/";
-  const title = String(payload.title || "").trim();
-  const referrer = String(payload.referrer || "").trim();
-  const refererHost = referrer ? (() => {
-    try {
-      return new URL(referrer).hostname;
-    } catch (error) {
-      return referrer;
-    }
-  })() : "-";
-
-  const forwardedFor = req.headers["x-forwarded-for"];
-  const forwardedIp = Array.isArray(forwardedFor)
-    ? forwardedFor[0]
-    : String(forwardedFor || "").split(",")[0].trim();
-  const userAgent = String(req.headers["user-agent"] || "").trim();
-  const country = String(req.headers["x-vercel-ip-country"] || "").trim();
-  const region = String(req.headers["x-vercel-ip-country-region"] || "").trim();
-  const city = String(req.headers["x-vercel-ip-city"] || "").trim();
-
-  const lines = [
-    "새 방문 알림",
-    "",
-    `페이지: ${path}`,
-    `제목: ${title || "-"}`,
-    `유입 경로: ${refererHost || "-"}`,
-    `위치: ${[country, region, city].filter(Boolean).join(" / ") || "-"}`,
-    `IP: ${forwardedIp || "-"}`,
-    `브라우저: ${userAgent || "-"}`
-  ];
+  const city = String(req.headers["x-vercel-ip-city"] || "").trim() || "Unknown";
+  const todayKey = formatDate();
+  const weekKey = formatDate(startOfWeek());
+  const monthKey = getMonthKey();
 
   try {
-    const telegramResponse = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        chat_id: chatId,
-        text: lines.join("\n")
-      })
-    });
-
-    const telegramResult = await telegramResponse.json();
-
-    if (!telegramResponse.ok || !telegramResult.ok) {
-      throw new Error("telegram_send_failed");
-    }
-
+    await Promise.all([
+      kvHashIncrement(`stats:day:${todayKey}`, "total", 1),
+      kvHashIncrement(`stats:day:${todayKey}`, `city:${city}`, 1),
+      kvHashIncrement(`stats:week:${weekKey}`, "total", 1),
+      kvHashIncrement(`stats:month:${monthKey}`, "total", 1)
+    ]);
     res.statusCode = 200;
     res.end(JSON.stringify({ ok: true }));
   } catch (error) {
     res.statusCode = 502;
-    res.end(JSON.stringify({ message: "방문 알림을 전송하지 못했습니다." }));
+    res.end(JSON.stringify({ message: "방문 집계를 저장하지 못했습니다." }));
   }
 };

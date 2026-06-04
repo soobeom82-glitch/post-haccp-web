@@ -1,3 +1,5 @@
+const { sendTelegramMessage } = require("./_lib/telegram");
+
 module.exports = async (req, res) => {
   res.setHeader("Content-Type", "application/json; charset=utf-8");
 
@@ -8,10 +10,7 @@ module.exports = async (req, res) => {
     return;
   }
 
-  const botToken = process.env.TELEGRAM_BOT_TOKEN;
-  const chatId = process.env.TELEGRAM_CHAT_ID;
-
-  if (!botToken || !chatId) {
+  if (!process.env.TELEGRAM_BOT_TOKEN || !process.env.TELEGRAM_CHAT_ID) {
     res.statusCode = 500;
     res.end(JSON.stringify({ message: "텔레그램 연동 설정이 아직 완료되지 않았습니다." }));
     return;
@@ -71,23 +70,7 @@ module.exports = async (req, res) => {
   ];
 
   try {
-    const telegramResponse = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        chat_id: chatId,
-        text: lines.join("\n")
-      })
-    });
-
-    const telegramResult = await telegramResponse.json();
-
-    if (!telegramResponse.ok || !telegramResult.ok) {
-      throw new Error("telegram_send_failed");
-    }
-
+    await sendTelegramMessage(lines.join("\n"));
     res.statusCode = 200;
     res.end(JSON.stringify({ ok: true }));
   } catch (error) {
