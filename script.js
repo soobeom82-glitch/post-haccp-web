@@ -6,6 +6,7 @@ const branchTabs = Array.from(document.querySelectorAll("[data-branch-tab]"));
 const branchPanels = Array.from(document.querySelectorAll("[data-branch-panel]"));
 const contactForm = document.querySelector("#contact-form");
 const contactFormStatus = document.querySelector("#contact-form-status");
+const visitSessionKey = "post-haccp-visit-notified";
 
 if (toggle && nav) {
   toggle.addEventListener("click", () => {
@@ -25,6 +26,59 @@ if (toggle && nav) {
 if (year) {
   year.textContent = String(new Date().getFullYear());
 }
+
+const shouldSendVisitSignal = () => {
+  if (window.location.protocol !== "https:" && window.location.protocol !== "http:") {
+    return false;
+  }
+
+  const host = window.location.hostname;
+
+  if (host === "localhost" || host === "127.0.0.1") {
+    return false;
+  }
+
+  if (window.sessionStorage.getItem(visitSessionKey) === "1") {
+    return false;
+  }
+
+  return true;
+};
+
+const sendVisitSignal = () => {
+  if (!shouldSendVisitSignal()) {
+    return;
+  }
+
+  const payload = {
+    path: window.location.pathname,
+    title: document.title,
+    referrer: document.referrer
+  };
+
+  try {
+    window.sessionStorage.setItem(visitSessionKey, "1");
+  } catch (error) {
+    return;
+  }
+
+  const body = JSON.stringify(payload);
+
+  if (navigator.sendBeacon) {
+    const blob = new Blob([body], { type: "application/json" });
+    navigator.sendBeacon("/api/visit", blob);
+    return;
+  }
+
+  fetch("/api/visit", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body,
+    keepalive: true
+  }).catch(() => {});
+};
 
 if (branchTabs.length && branchPanels.length) {
   const setActiveBranch = (branchId) => {
@@ -182,3 +236,5 @@ if (contactForm && contactFormStatus) {
     }
   });
 }
+
+sendVisitSignal();
