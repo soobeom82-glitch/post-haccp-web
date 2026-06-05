@@ -87,6 +87,11 @@ const getMonthlyReportPeriod = (now = new Date()) => {
   };
 };
 
+const isFirstDayOfMonthInKst = (now = new Date()) => {
+  const shifted = toKstShifted(now);
+  return shifted.getUTCDate() === 1;
+};
+
 module.exports = {
   DAY_MS,
   addDaysToShifted,
@@ -98,6 +103,7 @@ module.exports = {
   getMonthlyReportPeriod,
   getMonthKey,
   getWeeklyReportPeriod,
+  isFirstDayOfMonthInKst,
   startOfWeek,
   toKstShifted
 };

@@ -1,6 +1,6 @@
 const { buildMonthlyMessage, fetchPeriodStats, sendReportIfNeeded } = require("../_lib/report");
 const { ensureTables } = require("../_lib/db");
-const { getMonthlyReportPeriod } = require("../_lib/time");
+const { getMonthlyReportPeriod, isFirstDayOfMonthInKst } = require("../_lib/time");
 const { ensureCronAuthorized } = require("../_lib/cron");
 
 module.exports = async (req, res) => {
@@ -11,6 +11,12 @@ module.exports = async (req, res) => {
   }
 
   try {
+    if (!isFirstDayOfMonthInKst()) {
+      res.statusCode = 200;
+      res.end(JSON.stringify({ ok: true, skipped: true, reason: "not-kst-month-start" }));
+      return;
+    }
+
     await ensureTables();
     const period = getMonthlyReportPeriod();
     const currentStats = await fetchPeriodStats("month", period.currentKey);
