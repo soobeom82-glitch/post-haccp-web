@@ -1,4 +1,5 @@
-const { buildMonthlyMessage, fetchPeriodHash, sendReportIfNeeded } = require("../_lib/report");
+const { buildMonthlyMessage, fetchPeriodStats, sendReportIfNeeded } = require("../_lib/report");
+const { ensureTables } = require("../_lib/db");
 const { getMonthlyReportPeriod } = require("../_lib/time");
 const { ensureCronAuthorized } = require("../_lib/cron");
 
@@ -10,16 +11,18 @@ module.exports = async (req, res) => {
   }
 
   try {
+    await ensureTables();
     const period = getMonthlyReportPeriod();
-    const currentHash = await fetchPeriodHash("stats:month", period.currentKey);
-    const previousHash = await fetchPeriodHash("stats:month", period.previousKey);
+    const currentStats = await fetchPeriodStats("month", period.currentKey);
+    const previousStats = await fetchPeriodStats("month", period.previousKey);
     const sent = await sendReportIfNeeded({
-      sentKey: `reports:monthly:${period.currentKey}`,
+      reportType: "monthly",
+      reportKey: period.currentKey,
       message: buildMonthlyMessage({
         currentKey: period.currentKey,
         previousKey: period.previousKey,
-        currentHash,
-        previousHash
+        currentTotal: currentStats.total,
+        previousTotal: previousStats.total
       })
     });
 

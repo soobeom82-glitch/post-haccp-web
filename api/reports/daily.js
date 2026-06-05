@@ -1,4 +1,10 @@
-const { buildDailyMessage, fetchPeriodHash, sendReportIfNeeded } = require("../_lib/report");
+const {
+  buildDailyMessage,
+  fetchPeriodStats,
+  fetchDailyCityCounts,
+  sendReportIfNeeded
+} = require("../_lib/report");
+const { ensureTables } = require("../_lib/db");
 const { getDailyReportPeriod } = require("../_lib/time");
 const { ensureCronAuthorized } = require("../_lib/cron");
 
@@ -10,16 +16,20 @@ module.exports = async (req, res) => {
   }
 
   try {
+    await ensureTables();
     const { current, previous } = getDailyReportPeriod();
-    const currentHash = await fetchPeriodHash("stats:day", current);
-    const previousHash = await fetchPeriodHash("stats:day", previous);
+    const currentStats = await fetchPeriodStats("day", current);
+    const previousStats = await fetchPeriodStats("day", previous);
+    const topCities = await fetchDailyCityCounts(current);
     const sent = await sendReportIfNeeded({
-      sentKey: `reports:daily:${current}`,
+      reportType: "daily",
+      reportKey: current,
       message: buildDailyMessage({
         currentKey: current,
         previousKey: previous,
-        currentHash,
-        previousHash
+        currentTotal: currentStats.total,
+        previousTotal: previousStats.total,
+        topCities
       })
     });
 

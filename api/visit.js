@@ -1,4 +1,4 @@
-const { kvHashIncrement } = require("./_lib/kv");
+const { ensureTables, incrementCityCount, incrementPeriodCount } = require("./_lib/db");
 const { formatDate, getMonthKey, startOfWeek } = require("./_lib/time");
 
 module.exports = async (req, res) => {
@@ -11,9 +11,9 @@ module.exports = async (req, res) => {
     return;
   }
 
-  if (!process.env.KV_REST_API_URL || !process.env.KV_REST_API_TOKEN) {
+  if (!process.env.POSTGRES_URL && !process.env.DATABASE_URL) {
     res.statusCode = 500;
-    res.end(JSON.stringify({ message: "방문 집계 저장소 설정이 아직 완료되지 않았습니다." }));
+    res.end(JSON.stringify({ message: "방문 집계 데이터베이스 설정이 아직 완료되지 않았습니다." }));
     return;
   }
 
@@ -36,16 +36,17 @@ module.exports = async (req, res) => {
   const monthKey = getMonthKey();
 
   try {
+    await ensureTables();
     await Promise.all([
-      kvHashIncrement(`stats:day:${todayKey}`, "total", 1),
-      kvHashIncrement(`stats:day:${todayKey}`, `city:${city}`, 1),
-      kvHashIncrement(`stats:week:${weekKey}`, "total", 1),
-      kvHashIncrement(`stats:month:${monthKey}`, "total", 1)
+      incrementPeriodCount("day", todayKey, 1),
+      incrementCityCount(todayKey, city, 1),
+      incrementPeriodCount("week", weekKey, 1),
+      incrementPeriodCount("month", monthKey, 1)
     ]);
     res.statusCode = 200;
     res.end(JSON.stringify({ ok: true }));
   } catch (error) {
     res.statusCode = 502;
-    res.end(JSON.stringify({ message: "방문 집계를 저장하지 못했습니다." }));
+    res.end(JSON.stringify({ message: "방문 집계를 데이터베이스에 저장하지 못했습니다." }));
   }
 };

@@ -1,13 +1,11 @@
-const { kvGet, kvSet, kvHashGetAll } = require("./kv");
+const {
+  getDailyCityCounts,
+  getPeriodTotal,
+  hasSentReport,
+  markReportSent
+} = require("./db");
 const { daysInMonthFromKey } = require("./time");
 const { sendTelegramMessage } = require("./telegram");
-
-const toNumber = (value) => {
-  const numeric = Number(value || 0);
-  return Number.isFinite(numeric) ? numeric : 0;
-};
-
-const extractTotal = (hash) => toNumber(hash.total);
 
 const formatDelta = (current, previous) => {
   if (previous === 0) {
@@ -38,19 +36,7 @@ const formatMonthlyAverageWithDelta = (currentTotal, previousTotal, currentMonth
   return `${formatAverage(currentAverage)} (직전 평균 ${formatAverage(previousAverage)} / ${formatDelta(currentAverage, previousAverage)})`;
 };
 
-const getTopCities = (hash) => Object.entries(hash)
-  .filter(([key]) => key.startsWith("city:"))
-  .map(([key, value]) => ({
-    city: key.slice(5) || "Unknown",
-    count: toNumber(value)
-  }))
-  .filter((entry) => entry.count > 0)
-  .sort((left, right) => right.count - left.count);
-
-const buildDailyMessage = ({ currentKey, previousKey, currentHash, previousHash }) => {
-  const currentTotal = extractTotal(currentHash);
-  const previousTotal = extractTotal(previousHash);
-  const topCities = getTopCities(currentHash);
+const buildDailyMessage = ({ currentKey, previousKey, currentTotal, previousTotal, topCities }) => {
 
   const lines = [
     "일간 방문 리포트",
@@ -72,10 +58,7 @@ const buildDailyMessage = ({ currentKey, previousKey, currentHash, previousHash 
   return lines.join("\n");
 };
 
-const buildWeeklyMessage = ({ currentRange, previousRange, currentHash, previousHash }) => {
-  const currentTotal = extractTotal(currentHash);
-  const previousTotal = extractTotal(previousHash);
-
+const buildWeeklyMessage = ({ currentRange, previousRange, currentTotal, previousTotal }) => {
   return [
     "주간 방문 리포트",
     "",
@@ -85,10 +68,7 @@ const buildWeeklyMessage = ({ currentRange, previousRange, currentHash, previous
   ].join("\n");
 };
 
-const buildMonthlyMessage = ({ currentKey, previousKey, currentHash, previousHash }) => {
-  const currentTotal = extractTotal(currentHash);
-  const previousTotal = extractTotal(previousHash);
-
+const buildMonthlyMessage = ({ currentKey, previousKey, currentTotal, previousTotal }) => {
   return [
     "월간 방문 리포트",
     "",
@@ -98,22 +78,17 @@ const buildMonthlyMessage = ({ currentKey, previousKey, currentHash, previousHas
   ].join("\n");
 };
 
-const markReportSent = async (key) => kvSet(key, "1", 60 * 60 * 24 * 400);
+const fetchPeriodStats = async (periodType, periodKey) => ({
+  total: await getPeriodTotal(periodType, periodKey)
+});
 
-const alreadySent = async (key) => {
-  const existing = await kvGet(key);
-  return Boolean(existing);
-};
-
-const fetchPeriodHash = async (prefix, key) => kvHashGetAll(`${prefix}:${key}`);
-
-const sendReportIfNeeded = async ({ sentKey, message }) => {
-  if (await alreadySent(sentKey)) {
+const sendReportIfNeeded = async ({ reportType, reportKey, message }) => {
+  if (await hasSentReport(reportType, reportKey)) {
     return false;
   }
 
   await sendTelegramMessage(message);
-  await markReportSent(sentKey);
+  await markReportSent(reportType, reportKey);
   return true;
 };
 
@@ -121,6 +96,7 @@ module.exports = {
   buildDailyMessage,
   buildWeeklyMessage,
   buildMonthlyMessage,
-  fetchPeriodHash,
+  fetchPeriodStats,
+  fetchDailyCityCounts: getDailyCityCounts,
   sendReportIfNeeded
 };
