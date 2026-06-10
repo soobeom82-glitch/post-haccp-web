@@ -2,31 +2,37 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://post-haccp-web.vercel.app/</loc>
-    <lastmod>2026-05-09</lastmod>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://post-haccp-web.vercel.app/gwanggyo-haccp-facility.html</loc>
-    <lastmod>2026-05-09</lastmod>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://post-haccp-web.vercel.app/guri-branch.html</loc>
-    <lastmod>2026-05-09</lastmod>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://post-haccp-web.vercel.app/dongtan-branch.html</loc>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://post-haccp-web.vercel.app/haccp-preparation-support.html</loc>
-    <lastmod>2026-05-09</lastmod>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://post-haccp-web.vercel.app/food-manufacturing-consulting.html</loc>
-    <lastmod>2026-05-09</lastmod>
+    <lastmod>2026-06-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>

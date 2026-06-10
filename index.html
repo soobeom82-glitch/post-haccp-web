@@ -55,6 +55,8 @@
             "광교",
             "구리",
             "갈매",
+            "동탄",
+            "화성",
             "경기도"
           ]
         }
@@ -157,6 +159,13 @@
               >
                 <img src="./assets/guri-aerial.png" alt="구리 운영 거점 조감도">
               </article>
+              <article
+                class="visual-card"
+                data-caption-title="[동탄점] 신규 운영 지점 준비 중"
+                data-caption-address="동탄권역 기반 3호점으로 세부 위치와 시설 정보는 순차 공개 예정입니다."
+              >
+                <img src="./assets/dongtan-aerial.jpeg" alt="동탄 운영 거점 조감도">
+              </article>
             </div>
             <div class="carousel-controls">
               <div class="carousel-dots" aria-label="운영 거점 이미지 선택">
@@ -164,6 +173,7 @@
                 <button class="carousel-dot" type="button" aria-label="두 번째 운영 거점 이미지 보기"></button>
                 <button class="carousel-dot" type="button" aria-label="세 번째 운영 거점 이미지 보기"></button>
                 <button class="carousel-dot" type="button" aria-label="네 번째 운영 거점 이미지 보기"></button>
+                <button class="carousel-dot" type="button" aria-label="다섯 번째 운영 거점 이미지 보기"></button>
               </div>
               <div class="carousel-buttons">
                 <button class="carousel-button" type="button" data-direction="prev" aria-controls="operating-base-track">이전</button>
@@ -273,6 +283,16 @@
               <a class="button button-secondary" href="./guri-branch.html">구리점 상세 보기</a>
             </div>
           </article>
+          <article class="branch-card">
+            <img src="./assets/dongtan-aerial.jpeg" alt="동탄점 조감도">
+            <div class="branch-card-copy">
+              <p class="branch-card-label">DONGTAN</p>
+              <h3>동탄점</h3>
+              <p>동탄권역 기반으로 준비 중인 3호점입니다. 조감도와 준비 현황을 먼저 확인하고 사전 상담을 남길 수 있습니다.</p>
+              <p class="branch-card-meta">세부 위치 및 시설 정보 순차 공개 예정</p>
+              <a class="button button-secondary" href="./dongtan-branch.html">동탄점 상세 보기</a>
+            </div>
+          </article>
         </div>
       </section>
 
@@ -341,6 +361,17 @@
             data-branch-tab="guri"
           >
             구리점
+          </button>
+          <button
+            class="branch-facility-tab"
+            type="button"
+            role="tab"
+            aria-selected="false"
+            aria-controls="branch-panel-dongtan"
+            id="branch-tab-dongtan"
+            data-branch-tab="dongtan"
+          >
+            동탄점
           </button>
         </div>
         <div class="branch-facility-panels">
@@ -450,6 +481,32 @@
               </div>
             </section>
           </section>
+          <section
+            class="branch-facility-panel"
+            id="branch-panel-dongtan"
+            role="tabpanel"
+            aria-labelledby="branch-tab-dongtan"
+            data-branch-panel="dongtan"
+            hidden
+          >
+            <section class="hero-carousel facility-carousel" data-carousel aria-label="동탄점 조감도">
+              <div class="carousel-track" id="facility-track-dongtan" tabindex="0">
+                <article class="visual-card facility-card">
+                  <img src="./assets/dongtan-aerial.jpeg" alt="동탄점 조감도">
+                  <div class="visual-card-caption">동탄점 조감도</div>
+                </article>
+              </div>
+              <div class="carousel-controls">
+                <div class="carousel-dots" aria-label="동탄점 조감도 선택">
+                  <button class="carousel-dot is-active" type="button" aria-label="동탄점 조감도 보기"></button>
+                </div>
+                <div class="carousel-buttons">
+                  <button class="carousel-button" type="button" data-direction="prev" aria-controls="facility-track-dongtan">이전</button>
+                  <button class="carousel-button" type="button" data-direction="next" aria-controls="facility-track-dongtan">다음</button>
+                </div>
+              </div>
+            </section>
+          </section>
         </div>
       </section>
 
@@ -497,6 +554,12 @@
             <h3>구리점 시설과 상담 안내</h3>
             <p>구리점 조감도, 시설 구성, 기본 정보를 한 번에 확인할 수 있습니다.</p>
             <a class="button button-secondary" href="./guri-branch.html">상세 보기</a>
+          </article>
+          <article class="search-entry-card">
+            <p class="search-entry-label">DONGTAN BRANCH</p>
+            <h3>동탄점 준비 현황 안내</h3>
+            <p>동탄점 조감도와 3호점 준비 현황을 먼저 확인하고 상담을 남길 수 있습니다.</p>
+            <a class="button button-secondary" href="./dongtan-branch.html">상세 보기</a>
           </article>
           <article class="search-entry-card">
             <p class="search-entry-label">HACCP 인증 준비 지원</p>
@@ -691,6 +754,7 @@
                 <div class="branch-checklist-options">
                   <label><input type="checkbox" name="branches" value="광교점"> 광교점</label>
                   <label><input type="checkbox" name="branches" value="구리점"> 구리점</label>
+                  <label><input type="checkbox" name="branches" value="동탄점"> 동탄점</label>
                 </div>
               </div>
 
@@ -739,6 +803,12 @@
           <p>주소 : 경기도 구리시 갈매순환로166번길 46, 지식산업센터동 지하 2층 4,5,6,7호 (갈매동, 금강펜테리움IX타워 지식산업센터)</p>
           <p>연락처 : <a href="tel:01033360840">010-3336-0840</a></p>
           <p>E-mail : <a href="mailto:ty0001@naver.com">ty0001@naver.com</a></p>
+        </section>
+        <section class="footer-branch">
+          <p class="footer-branch-name">동탄점</p>
+          <p>3호점 준비 중</p>
+          <p>세부 위치 및 시설 정보 순차 공개 예정</p>
+          <p>문의 : <a href="tel:01028460544">010-2846-0544</a></p>
         </section>
       </div>
       <p class="footer-copy">Copyright 2026 포스트 공공해썹 All Rights Reserved.</p>
