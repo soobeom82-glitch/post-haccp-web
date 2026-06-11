@@ -1,5 +1,6 @@
 const {
   buildDailyMessage,
+  fetchDailyInteractionStats,
   fetchPeriodStats,
   fetchDailyCityCounts,
   sendReportIfNeeded
@@ -21,6 +22,8 @@ module.exports = async (req, res) => {
     const currentStats = await fetchPeriodStats("day", current);
     const previousStats = await fetchPeriodStats("day", previous);
     const topCities = await fetchDailyCityCounts(current);
+    const currentInteractions = await fetchDailyInteractionStats(current);
+    const previousInteractions = await fetchDailyInteractionStats(previous);
     const sent = await sendReportIfNeeded({
       reportType: "daily",
       reportKey: current,
@@ -29,7 +32,9 @@ module.exports = async (req, res) => {
         previousKey: previous,
         currentTotal: currentStats.total,
         previousTotal: previousStats.total,
-        topCities
+        topCities,
+        currentInteractions,
+        previousInteractions
       })
     });
 
