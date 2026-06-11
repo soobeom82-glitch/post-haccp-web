@@ -29,16 +29,6 @@ const ensureTables = async () => {
       PRIMARY KEY (report_type, report_key)
     )
   `;
-
-  await sql`
-    CREATE TABLE IF NOT EXISTS interaction_daily_stats (
-      period_key TEXT NOT NULL,
-      event_name TEXT NOT NULL,
-      total_events INTEGER NOT NULL DEFAULT 0,
-      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-      PRIMARY KEY (period_key, event_name)
-    )
-  `;
 };
 
 const incrementPeriodCount = async (periodType, periodKey, amount) => {
@@ -61,62 +51,6 @@ const incrementCityCount = async (periodKey, city, amount) => {
       total_visits = visit_daily_city_stats.total_visits + EXCLUDED.total_visits,
       updated_at = NOW()
   `;
-};
-
-const incrementInteractionEvent = async (periodKey, eventName, amount) => {
-  await sql`
-    INSERT INTO interaction_daily_stats (period_key, event_name, total_events)
-    VALUES (${periodKey}, ${eventName}, ${amount})
-    ON CONFLICT (period_key, event_name)
-    DO UPDATE SET
-      total_events = interaction_daily_stats.total_events + EXCLUDED.total_events,
-      updated_at = NOW()
-  `;
-};
-
-const getInteractionCountsForPeriodKey = async (periodKey) => {
-  const { rows } = await sql`
-    SELECT event_name, total_events
-    FROM interaction_daily_stats
-    WHERE period_key = ${periodKey}
-    ORDER BY total_events DESC, event_name ASC
-  `;
-
-  return rows.map((row) => ({
-    eventName: String(row.event_name || ""),
-    count: Number(row.total_events || 0)
-  }));
-};
-
-const getInteractionCountsForDateRange = async (startKey, endKey) => {
-  const { rows } = await sql`
-    SELECT event_name, SUM(total_events)::INTEGER AS total_events
-    FROM interaction_daily_stats
-    WHERE period_key >= ${startKey}
-      AND period_key <= ${endKey}
-    GROUP BY event_name
-    ORDER BY total_events DESC, event_name ASC
-  `;
-
-  return rows.map((row) => ({
-    eventName: String(row.event_name || ""),
-    count: Number(row.total_events || 0)
-  }));
-};
-
-const getInteractionCountsForMonth = async (monthKey) => {
-  const { rows } = await sql`
-    SELECT event_name, SUM(total_events)::INTEGER AS total_events
-    FROM interaction_daily_stats
-    WHERE period_key LIKE ${`${monthKey}-%`}
-    GROUP BY event_name
-    ORDER BY total_events DESC, event_name ASC
-  `;
-
-  return rows.map((row) => ({
-    eventName: String(row.event_name || ""),
-    count: Number(row.total_events || 0)
-  }));
 };
 
 const getPeriodTotal = async (periodType, periodKey) => {
@@ -167,11 +101,7 @@ const markReportSent = async (reportType, reportKey) => {
 
 module.exports = {
   ensureTables,
-  getInteractionCountsForDateRange,
-  getInteractionCountsForMonth,
-  getInteractionCountsForPeriodKey,
   incrementCityCount,
-  incrementInteractionEvent,
   incrementPeriodCount,
   getPeriodTotal,
   getDailyCityCounts,

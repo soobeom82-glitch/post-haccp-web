@@ -1,9 +1,4 @@
-const {
-  buildWeeklyMessage,
-  fetchPeriodStats,
-  fetchWeeklyInteractionStats,
-  sendReportIfNeeded
-} = require("../_lib/report");
+const { buildWeeklyMessage, fetchPeriodStats, sendReportIfNeeded } = require("../_lib/report");
 const { ensureTables } = require("../_lib/db");
 const { getWeeklyReportPeriod } = require("../_lib/time");
 const { ensureCronAuthorized } = require("../_lib/cron");
@@ -20,8 +15,6 @@ module.exports = async (req, res) => {
     const period = getWeeklyReportPeriod();
     const currentStats = await fetchPeriodStats("week", period.currentKey);
     const previousStats = await fetchPeriodStats("week", period.previousKey);
-    const currentInteractions = await fetchWeeklyInteractionStats(period.currentKey);
-    const previousInteractions = await fetchWeeklyInteractionStats(period.previousKey);
     const sent = await sendReportIfNeeded({
       reportType: "weekly",
       reportKey: period.currentKey,
@@ -29,9 +22,7 @@ module.exports = async (req, res) => {
         currentRange: period.currentRange,
         previousRange: period.previousRange,
         currentTotal: currentStats.total,
-        previousTotal: previousStats.total,
-        currentInteractions,
-        previousInteractions
+        previousTotal: previousStats.total
       })
     });
 

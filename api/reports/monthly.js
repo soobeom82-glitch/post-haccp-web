@@ -1,9 +1,4 @@
-const {
-  buildMonthlyMessage,
-  fetchMonthlyInteractionStats,
-  fetchPeriodStats,
-  sendReportIfNeeded
-} = require("../_lib/report");
+const { buildMonthlyMessage, fetchPeriodStats, sendReportIfNeeded } = require("../_lib/report");
 const { ensureTables } = require("../_lib/db");
 const { getMonthlyReportPeriod, isFirstDayOfMonthInKst } = require("../_lib/time");
 const { ensureCronAuthorized } = require("../_lib/cron");
@@ -26,8 +21,6 @@ module.exports = async (req, res) => {
     const period = getMonthlyReportPeriod();
     const currentStats = await fetchPeriodStats("month", period.currentKey);
     const previousStats = await fetchPeriodStats("month", period.previousKey);
-    const currentInteractions = await fetchMonthlyInteractionStats(period.currentKey);
-    const previousInteractions = await fetchMonthlyInteractionStats(period.previousKey);
     const sent = await sendReportIfNeeded({
       reportType: "monthly",
       reportKey: period.currentKey,
@@ -35,9 +28,7 @@ module.exports = async (req, res) => {
         currentKey: period.currentKey,
         previousKey: period.previousKey,
         currentTotal: currentStats.total,
-        previousTotal: previousStats.total,
-        currentInteractions,
-        previousInteractions
+        previousTotal: previousStats.total
       })
     });
 

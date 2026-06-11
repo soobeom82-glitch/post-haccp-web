@@ -6,9 +6,7 @@ const branchTabs = Array.from(document.querySelectorAll("[data-branch-tab]"));
 const branchPanels = Array.from(document.querySelectorAll("[data-branch-panel]"));
 const contactForm = document.querySelector("#contact-form");
 const contactFormStatus = document.querySelector("#contact-form-status");
-const trackedEvents = Array.from(document.querySelectorAll("[data-track-event]"));
 const visitSessionKey = "post-haccp-visit-notified";
-const contactFormStartedKey = "post-haccp-contact-form-started";
 
 if (toggle && nav) {
   toggle.addEventListener("click", () => {
@@ -73,32 +71,6 @@ const sendVisitSignal = () => {
   }
 
   fetch("/api/visit", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body,
-    keepalive: true
-  }).catch(() => {});
-};
-
-const sendInteractionEvent = (eventName) => {
-  if (!eventName || (window.location.protocol !== "https:" && window.location.protocol !== "http:")) {
-    return;
-  }
-
-  const body = JSON.stringify({
-    eventName,
-    path: window.location.pathname
-  });
-
-  if (navigator.sendBeacon) {
-    const blob = new Blob([body], { type: "application/json" });
-    navigator.sendBeacon("/api/event", blob);
-    return;
-  }
-
-  fetch("/api/event", {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -200,14 +172,6 @@ carousels.forEach((carousel) => {
   setActiveSlide(0);
 });
 
-if (trackedEvents.length) {
-  trackedEvents.forEach((element) => {
-    element.addEventListener("click", () => {
-      sendInteractionEvent(element.dataset.trackEvent);
-    });
-  });
-}
-
 if (contactForm && contactFormStatus) {
   const submitButton = contactForm.querySelector('button[type="submit"]');
 
@@ -215,19 +179,6 @@ if (contactForm && contactFormStatus) {
     contactFormStatus.textContent = message;
     contactFormStatus.classList.toggle("is-error", isError);
   };
-
-  contactForm.addEventListener("focusin", () => {
-    if (window.sessionStorage.getItem(contactFormStartedKey) === "1") {
-      return;
-    }
-
-    try {
-      window.sessionStorage.setItem(contactFormStartedKey, "1");
-      sendInteractionEvent("contact_form_start");
-    } catch (error) {
-      sendInteractionEvent("contact_form_start");
-    }
-  }, { once: true });
 
   contactForm.addEventListener("submit", async (event) => {
     event.preventDefault();
@@ -276,11 +227,6 @@ if (contactForm && contactFormStatus) {
 
       contactForm.reset();
       setFormStatus("상담 접수가 완료되었습니다. 확인 후 연락드리겠습니다.");
-      sendInteractionEvent("contact_form_submit_success");
-
-      try {
-        window.sessionStorage.removeItem(contactFormStartedKey);
-      } catch (error) {}
     } catch (error) {
       setFormStatus(error instanceof Error ? error.message : "전송 중 문제가 발생했습니다.", true);
     } finally {
