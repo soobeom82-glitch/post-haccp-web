@@ -7,6 +7,7 @@ const branchPanels = Array.from(document.querySelectorAll("[data-branch-panel]")
 const contactForm = document.querySelector("#contact-form");
 const contactFormStatus = document.querySelector("#contact-form-status");
 const visitSessionKey = "post-haccp-visit-notified";
+let hasTrackedContactFormStart = false;
 
 if (toggle && nav) {
   toggle.addEventListener("click", () => {
@@ -79,6 +80,64 @@ const sendVisitSignal = () => {
     keepalive: true
   }).catch(() => {});
 };
+
+const shouldTrackInteraction = () => {
+  if (window.location.protocol !== "https:" && window.location.protocol !== "http:") {
+    return false;
+  }
+
+  const host = window.location.hostname;
+
+  return host !== "localhost" && host !== "127.0.0.1";
+};
+
+const sendInteractionEvent = (eventName, eventLabel = "") => {
+  if (!shouldTrackInteraction() || !eventName) {
+    return;
+  }
+
+  const payload = {
+    eventName,
+    eventLabel,
+    path: window.location.pathname
+  };
+
+  const body = JSON.stringify(payload);
+
+  if (navigator.sendBeacon) {
+    const blob = new Blob([body], { type: "application/json" });
+    navigator.sendBeacon("/api/event", blob);
+    return;
+  }
+
+  fetch("/api/event", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body,
+    keepalive: true
+  }).catch(() => {});
+};
+
+document.addEventListener("click", (event) => {
+  if (!(event.target instanceof Element)) {
+    return;
+  }
+
+  const trackTarget = event.target.closest("[data-track-event]");
+
+  if (!trackTarget) {
+    return;
+  }
+
+  const eventName = String(trackTarget.dataset.trackEvent || "").trim();
+  const eventLabel = String(
+    trackTarget.dataset.trackLabel || trackTarget.textContent || ""
+  ).replace(/\s+/g, " ").trim().slice(0, 120);
+
+  sendInteractionEvent(eventName, eventLabel);
+});
 
 if (branchTabs.length && branchPanels.length) {
   const setActiveBranch = (branchId) => {
@@ -226,6 +285,8 @@ if (contactForm && contactFormStatus) {
       }
 
       contactForm.reset();
+      hasTrackedContactFormStart = false;
+      sendInteractionEvent("contact_form_submit_success", "무료 상담 신청 완료");
       setFormStatus("상담 접수가 완료되었습니다. 확인 후 연락드리겠습니다.");
     } catch (error) {
       setFormStatus(error instanceof Error ? error.message : "전송 중 문제가 발생했습니다.", true);
@@ -235,6 +296,18 @@ if (contactForm && contactFormStatus) {
       }
     }
   });
+
+  const trackFormStart = () => {
+    if (hasTrackedContactFormStart) {
+      return;
+    }
+
+    hasTrackedContactFormStart = true;
+    sendInteractionEvent("contact_form_start", "무료 상담 폼 입력 시작");
+  };
+
+  contactForm.addEventListener("focusin", trackFormStart);
+  contactForm.addEventListener("input", trackFormStart);
 }
 
 sendVisitSignal();

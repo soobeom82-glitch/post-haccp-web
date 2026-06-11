@@ -29,6 +29,18 @@ const ensureTables = async () => {
       PRIMARY KEY (report_type, report_key)
     )
   `;
+
+  await sql`
+    CREATE TABLE IF NOT EXISTS interaction_daily_stats (
+      period_key TEXT NOT NULL,
+      event_name TEXT NOT NULL,
+      event_label TEXT NOT NULL,
+      page_path TEXT NOT NULL,
+      total_events INTEGER NOT NULL DEFAULT 0,
+      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      PRIMARY KEY (period_key, event_name, event_label, page_path)
+    )
+  `;
 };
 
 const incrementPeriodCount = async (periodType, periodKey, amount) => {
@@ -49,6 +61,17 @@ const incrementCityCount = async (periodKey, city, amount) => {
     ON CONFLICT (period_key, city)
     DO UPDATE SET
       total_visits = visit_daily_city_stats.total_visits + EXCLUDED.total_visits,
+      updated_at = NOW()
+  `;
+};
+
+const incrementInteractionCount = async (periodKey, eventName, eventLabel, pagePath, amount) => {
+  await sql`
+    INSERT INTO interaction_daily_stats (period_key, event_name, event_label, page_path, total_events)
+    VALUES (${periodKey}, ${eventName}, ${eventLabel}, ${pagePath}, ${amount})
+    ON CONFLICT (period_key, event_name, event_label, page_path)
+    DO UPDATE SET
+      total_events = interaction_daily_stats.total_events + EXCLUDED.total_events,
       updated_at = NOW()
   `;
 };
@@ -102,6 +125,7 @@ const markReportSent = async (reportType, reportKey) => {
 module.exports = {
   ensureTables,
   incrementCityCount,
+  incrementInteractionCount,
   incrementPeriodCount,
   getPeriodTotal,
   getDailyCityCounts,
