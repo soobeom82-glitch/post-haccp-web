@@ -37,6 +37,7 @@ body {
   word-break: keep-all;
   overflow-wrap: normal;
   line-break: strict;
+  overflow-x: hidden;
   padding-bottom: 100px;
 }
 
@@ -59,6 +60,7 @@ textarea {
 
 .site-shell {
   width: min(calc(100% - (var(--page-gutter) * 2)), var(--max-width));
+  max-width: 100%;
   margin: 0 auto;
 }
 
@@ -1522,17 +1524,38 @@ textarea {
   }
 
   .topbar {
+    flex-wrap: wrap;
     align-items: flex-start;
+    gap: 12px;
+  }
+
+  .brand {
+    min-width: 0;
+    flex: 1 1 100%;
+  }
+
+  .brand-text {
+    min-width: 0;
+  }
+
+  .brand-text strong,
+  .brand-text span {
+    overflow-wrap: anywhere;
   }
 
   .topbar-actions {
-    margin-left: auto;
+    width: 100%;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+    align-items: stretch;
+    gap: 10px;
   }
 
   .header-kakao,
   .header-phone {
     min-height: 48px;
     padding: 9px 14px;
+    min-width: 0;
   }
 
   .header-kakao strong,
@@ -1614,6 +1637,65 @@ textarea {
     font-size: clamp(2.35rem, 12vw, 3.4rem);
   }
 
+  .hero-text {
+    font-size: 0.98rem;
+  }
+
+  .event-banner {
+    width: 100%;
+    max-width: 100%;
+    padding: 11px 14px;
+  }
+
+  .event-banner span {
+    font-size: 0.92rem;
+  }
+
+  .topbar-actions {
+    grid-template-columns: 1fr 1fr 72px;
+    gap: 8px;
+  }
+
+  .header-kakao,
+  .header-phone,
+  .menu-toggle {
+    min-width: 0;
+  }
+
+  .header-kakao,
+  .header-phone {
+    padding: 8px 10px;
+  }
+
+  .header-kakao span,
+  .header-phone span {
+    font-size: 0.66rem;
+  }
+
+  .header-kakao strong,
+  .header-phone strong {
+    font-size: 0.72rem;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+  }
+
+  .menu-toggle {
+    justify-content: center;
+    padding: 8px 10px;
+  }
+
+  .hero-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+
+  .hero-actions .button {
+    width: 100%;
+    min-width: 0;
+    padding: 0 16px;
+  }
+
   .section {
     padding: 56px 0;
   }
@@ -1642,17 +1724,19 @@ textarea {
     right: 16px;
     bottom: 16px;
     left: 16px;
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
   }
 
   .floating-call,
   .floating-kakao,
   .floating-contact {
-    flex: 1 1 0;
-    min-width: 0;
+    width: 100%;
     min-height: 42px;
-    padding: 0 10px;
-    font-size: 0.74rem;
+    padding: 0 8px;
+    font-size: 0.68rem;
+    line-height: 1.15;
   }
 
   .facility-card img {
