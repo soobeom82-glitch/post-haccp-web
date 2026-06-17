@@ -1,5 +1,13 @@
 const { ensureTables, incrementCityCount, incrementPeriodCount } = require("./_lib/db");
+const {
+  detectDeviceType,
+  formatLocationFromHeaders,
+  formatPageLabel,
+  formatReferrer,
+  formatTimestampKst
+} = require("./_lib/analytics");
 const { formatDate, getMonthKey, startOfWeek } = require("./_lib/time");
+const { sendTelegramMessage } = require("./_lib/telegram");
 
 module.exports = async (req, res) => {
   res.setHeader("Content-Type", "application/json; charset=utf-8");
@@ -34,6 +42,22 @@ module.exports = async (req, res) => {
   const todayKey = formatDate();
   const weekKey = formatDate(startOfWeek());
   const monthKey = getMonthKey();
+  const pagePath = String(payload.path || "/").trim() || "/";
+  const pageTitle = String(payload.title || "").trim() || "-";
+  const referrer = String(payload.referrer || "").trim();
+  const location = formatLocationFromHeaders(req.headers);
+  const deviceType = detectDeviceType(req.headers["user-agent"]);
+
+  const realtimeMessage = [
+    "실시간 방문 로그",
+    "",
+    `페이지: ${formatPageLabel(pagePath)}`,
+    `제목: ${pageTitle}`,
+    `유입: ${formatReferrer(referrer)}`,
+    `디바이스: ${deviceType}`,
+    `위치: ${location}`,
+    `시간: ${formatTimestampKst()} KST`
+  ].join("\n");
 
   try {
     await ensureTables();
@@ -43,6 +67,11 @@ module.exports = async (req, res) => {
       incrementPeriodCount("week", weekKey, 1),
       incrementPeriodCount("month", monthKey, 1)
     ]);
+
+    if (process.env.TELEGRAM_BOT_TOKEN && process.env.TELEGRAM_CHAT_ID) {
+      await sendTelegramMessage(realtimeMessage).catch(() => null);
+    }
+
     res.statusCode = 200;
     res.end(JSON.stringify({ ok: true }));
   } catch (error) {

@@ -91,7 +91,50 @@ const shouldTrackInteraction = () => {
   return host !== "localhost" && host !== "127.0.0.1";
 };
 
-const sendInteractionEvent = (eventName, eventLabel = "") => {
+const resolveTrackPayload = (target) => {
+  if (!(target instanceof Element)) {
+    return null;
+  }
+
+  const explicitEvent = String(target.dataset.trackEvent || "").trim();
+  const explicitLabel = String(target.dataset.trackLabel || "").trim();
+  const textLabel = String(target.textContent || "")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 120);
+  const ariaLabel = String(target.getAttribute("aria-label") || "").trim();
+  const targetHref = target instanceof HTMLAnchorElement
+    ? String(target.getAttribute("href") || "").trim()
+    : "";
+
+  if (explicitEvent) {
+    return {
+      eventName: explicitEvent,
+      eventLabel: explicitLabel || ariaLabel || textLabel || "-",
+      targetHref: targetHref || "-"
+    };
+  }
+
+  if (target.matches("a.button, a.header-phone, a.header-kakao, a.hero-phone-card, a.floating-call, a.floating-kakao, a.floating-contact")) {
+    return {
+      eventName: "generic_link_click",
+      eventLabel: ariaLabel || textLabel || "링크 클릭",
+      targetHref: targetHref || "-"
+    };
+  }
+
+  if (target.matches("button.button, .carousel-button, .menu-toggle, [role='tab']")) {
+    return {
+      eventName: "generic_button_click",
+      eventLabel: explicitLabel || ariaLabel || textLabel || "버튼 클릭",
+      targetHref: "-"
+    };
+  }
+
+  return null;
+};
+
+const sendInteractionEvent = ({ eventName, eventLabel = "", targetHref = "-" }) => {
   if (!shouldTrackInteraction() || !eventName) {
     return;
   }
@@ -99,7 +142,9 @@ const sendInteractionEvent = (eventName, eventLabel = "") => {
   const payload = {
     eventName,
     eventLabel,
-    path: window.location.pathname
+    path: window.location.pathname,
+    pageTitle: document.title,
+    targetHref
   };
 
   const body = JSON.stringify(payload);
@@ -125,18 +170,21 @@ document.addEventListener("click", (event) => {
     return;
   }
 
-  const trackTarget = event.target.closest("[data-track-event]");
+  const trackTarget = event.target.closest(
+    "[data-track-event], a.button, button.button, .carousel-button, .menu-toggle, [role='tab'], a.header-phone, a.header-kakao, a.hero-phone-card, a.floating-call, a.floating-kakao, a.floating-contact"
+  );
 
   if (!trackTarget) {
     return;
   }
 
-  const eventName = String(trackTarget.dataset.trackEvent || "").trim();
-  const eventLabel = String(
-    trackTarget.dataset.trackLabel || trackTarget.textContent || ""
-  ).replace(/\s+/g, " ").trim().slice(0, 120);
+  const trackPayload = resolveTrackPayload(trackTarget);
 
-  sendInteractionEvent(eventName, eventLabel);
+  if (!trackPayload) {
+    return;
+  }
+
+  sendInteractionEvent(trackPayload);
 });
 
 if (branchTabs.length && branchPanels.length) {
@@ -286,7 +334,11 @@ if (contactForm && contactFormStatus) {
 
       contactForm.reset();
       hasTrackedContactFormStart = false;
-      sendInteractionEvent("contact_form_submit_success", "무료 상담 신청 완료");
+      sendInteractionEvent({
+        eventName: "contact_form_submit_success",
+        eventLabel: "무료 상담 신청 완료",
+        targetHref: "-"
+      });
       setFormStatus("상담 접수가 완료되었습니다. 확인 후 연락드리겠습니다.");
     } catch (error) {
       setFormStatus(error instanceof Error ? error.message : "전송 중 문제가 발생했습니다.", true);
@@ -303,7 +355,11 @@ if (contactForm && contactFormStatus) {
     }
 
     hasTrackedContactFormStart = true;
-    sendInteractionEvent("contact_form_start", "무료 상담 폼 입력 시작");
+    sendInteractionEvent({
+      eventName: "contact_form_start",
+      eventLabel: "무료 상담 폼 입력 시작",
+      targetHref: "-"
+    });
   };
 
   contactForm.addEventListener("focusin", trackFormStart);
