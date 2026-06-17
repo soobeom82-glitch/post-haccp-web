@@ -80,6 +80,13 @@ module.exports = async (req, res) => {
     res.statusCode = 200;
     res.end(JSON.stringify({ ok: true }));
   } catch (error) {
+    console.error("api/event failed", {
+      message: error instanceof Error ? error.message : "unknown_error",
+      eventName,
+      eventLabel,
+      pagePath,
+      targetHref
+    });
     res.statusCode = 500;
     res.end(JSON.stringify({ message: "이벤트를 저장하지 못했습니다." }));
   }

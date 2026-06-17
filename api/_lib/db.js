@@ -31,7 +31,7 @@ const ensureTables = async () => {
   `;
 
   await sql`
-    CREATE TABLE IF NOT EXISTS interaction_daily_stats (
+    CREATE TABLE IF NOT EXISTS interaction_detail_daily_stats (
       period_key TEXT NOT NULL,
       event_name TEXT NOT NULL,
       event_label TEXT NOT NULL,
@@ -67,11 +67,11 @@ const incrementCityCount = async (periodKey, city, amount) => {
 
 const incrementInteractionCount = async (periodKey, eventName, eventLabel, pagePath, amount) => {
   await sql`
-    INSERT INTO interaction_daily_stats (period_key, event_name, event_label, page_path, total_events)
+    INSERT INTO interaction_detail_daily_stats (period_key, event_name, event_label, page_path, total_events)
     VALUES (${periodKey}, ${eventName}, ${eventLabel}, ${pagePath}, ${amount})
     ON CONFLICT (period_key, event_name, event_label, page_path)
     DO UPDATE SET
-      total_events = interaction_daily_stats.total_events + EXCLUDED.total_events,
+      total_events = interaction_detail_daily_stats.total_events + EXCLUDED.total_events,
       updated_at = NOW()
   `;
 };
