@@ -8,6 +8,8 @@ const contactForm = document.querySelector("#contact-form");
 const contactFormStatus = document.querySelector("#contact-form-status");
 const visitSessionKey = "post-haccp-visit-notified";
 let hasTrackedContactFormStart = false;
+let lastInteractionKey = "";
+let lastInteractionAt = 0;
 
 if (toggle && nav) {
   toggle.addEventListener("click", () => {
@@ -165,14 +167,41 @@ const sendInteractionEvent = ({ eventName, eventLabel = "", targetHref = "-" }) 
   }).catch(() => {});
 };
 
-document.addEventListener("click", (event) => {
+const findTrackTarget = (eventTarget) => {
+  if (!(eventTarget instanceof Element)) {
+    return null;
+  }
+
+  return eventTarget.closest(
+    "[data-track-event], a.button, button.button, .carousel-button, .menu-toggle, [role='tab'], a.header-phone, a.header-kakao, a.hero-phone-card, a.floating-call, a.floating-kakao, a.floating-contact"
+  );
+};
+
+const shouldSkipDuplicateInteraction = (trackPayload) => {
+  const interactionKey = [
+    trackPayload.eventName,
+    trackPayload.eventLabel,
+    trackPayload.targetHref,
+    window.location.pathname
+  ].join("|");
+  const now = Date.now();
+
+  if (interactionKey === lastInteractionKey && now - lastInteractionAt < 1200) {
+    return true;
+  }
+
+  lastInteractionKey = interactionKey;
+  lastInteractionAt = now;
+
+  return false;
+};
+
+const trackInteractionFromEvent = (event) => {
   if (!(event.target instanceof Element)) {
     return;
   }
 
-  const trackTarget = event.target.closest(
-    "[data-track-event], a.button, button.button, .carousel-button, .menu-toggle, [role='tab'], a.header-phone, a.header-kakao, a.hero-phone-card, a.floating-call, a.floating-kakao, a.floating-contact"
-  );
+  const trackTarget = findTrackTarget(event.target);
 
   if (!trackTarget) {
     return;
@@ -184,8 +213,16 @@ document.addEventListener("click", (event) => {
     return;
   }
 
+  if (shouldSkipDuplicateInteraction(trackPayload)) {
+    return;
+  }
+
   sendInteractionEvent(trackPayload);
-});
+};
+
+document.addEventListener("pointerdown", trackInteractionFromEvent);
+document.addEventListener("touchstart", trackInteractionFromEvent, { passive: true });
+document.addEventListener("click", trackInteractionFromEvent);
 
 if (branchTabs.length && branchPanels.length) {
   const setActiveBranch = (branchId) => {
