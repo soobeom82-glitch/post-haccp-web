@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>외포장실 예약 | 포스트공공해썹</title>
+  <meta name="robots" content="noindex,nofollow">
+  <meta
+    name="description"
+    content="포스트공공해썹 공동 구역 외포장실 사용 예약 페이지입니다."
+  >
+  <link rel="icon" type="image/png" href="../assets/brand-symbol.png">
+  <link rel="stylesheet" href="https://vendor-cdn.imweb.me/fonts/pretendard/web/variable/pretendardvariable.css?1669875619">
+  <link rel="stylesheet" href="./styles.css">
+  <script defer src="./script.js"></script>
+</head>
+<body>
+  <div class="board-shell">
+    <header class="board-toolbar">
+      <div class="toolbar-nav">
+        <button class="nav-button" type="button" id="prev-week-button" aria-label="이전 주">‹</button>
+        <button class="today-button" type="button" id="today-button">이번 주</button>
+        <button class="nav-button" type="button" id="next-week-button" aria-label="다음 주">›</button>
+      </div>
+      <strong class="week-range-label" id="week-range-label">이번 주</strong>
+      <div class="toolbar-status">
+        <button class="status-chip session-trigger is-hidden" type="button" id="session-chip" aria-expanded="false">
+          <span class="status-chip-label">로그인 계정</span>
+          <strong id="session-chip-main">생산실1</strong>
+          <span id="session-chip-detail">세션 만료까지 05:00</span>
+        </button>
+        <div class="status-chip is-hidden" id="board-status-chip">
+          <strong id="board-status-main">상태</strong>
+          <span id="board-status-detail">예약 현황을 불러오지 못했습니다.</span>
+        </div>
+        <button class="logout-button is-hidden" type="button" id="header-logout-button">로그아웃</button>
+        <section class="admin-menu is-hidden" id="admin-menu" aria-live="polite">
+          <div class="admin-menu-header">
+            <strong>계정 관리</strong>
+            <span>활성화와 비밀번호 초기화를 관리합니다.</span>
+          </div>
+          <div class="admin-menu-list" id="admin-menu-list"></div>
+          <p class="admin-menu-status" id="admin-menu-status"></p>
+        </section>
+      </div>
+    </header>
+
+    <main class="calendar-stage" id="calendar-stage">
+      <div class="calendar-grid" id="calendar-grid" aria-live="polite"></div>
+      <div class="current-time-line is-hidden" id="current-time-line">
+        <span id="current-time-label">현재</span>
+      </div>
+    </main>
+
+    <footer class="action-bar is-hidden" id="action-bar">
+      <div class="action-summary">
+        <strong id="action-summary-main">0개 선택</strong>
+        <span id="action-summary-detail">슬롯을 선택하세요.</span>
+      </div>
+      <div class="action-buttons">
+        <button class="secondary-button" type="button" id="clear-selection-button">선택 해제</button>
+        <button class="danger-button is-hidden" type="button" id="bulk-cancel-button">취소</button>
+        <button class="secondary-button is-hidden" type="button" id="bulk-modify-button">수정</button>
+        <button class="primary-button is-hidden" type="button" id="bulk-reserve-button">예약</button>
+      </div>
+    </footer>
+  </div>
+
+  <div class="modal-backdrop is-hidden" id="slot-modal-backdrop">
+    <section class="slot-modal" role="dialog" aria-modal="true" aria-labelledby="slot-modal-title">
+      <div class="modal-header">
+        <h2 id="slot-modal-title">선택된 슬롯</h2>
+        <button class="modal-close-button" type="button" id="modal-close-button" aria-label="닫기">닫기</button>
+      </div>
+
+      <div class="slot-summary-card" id="slot-summary-card">
+        <strong id="slot-summary-label">-</strong>
+        <p id="slot-summary-subtext">선택된 슬롯 정보를 확인하는 중입니다.</p>
+      </div>
+
+      <div class="modal-info-card">
+        <strong id="modal-info-title">진행</strong>
+        <p id="modal-info-text">작업 방식을 확인하는 중입니다.</p>
+      </div>
+
+      <form class="modal-form is-hidden" id="slot-login-form">
+        <div class="field">
+          <span class="field-label">로그인 계정</span>
+          <div class="account-chip-list" id="login-account-list" role="listbox" aria-label="로그인 계정 선택"></div>
+          <input id="login-room-id" name="roomId" type="hidden" required>
+        </div>
+        <label class="field">
+          <span>비밀번호 4자리</span>
+          <input id="login-pin" name="pin" type="password" inputmode="numeric" maxlength="4" placeholder="숫자 4자리" required>
+        </label>
+        <label class="field is-hidden" id="login-confirm-field">
+          <span>비밀번호 다시 입력</span>
+          <input id="login-confirm-pin" name="confirmPin" type="password" inputmode="numeric" maxlength="4" placeholder="숫자 4자리 재입력">
+        </label>
+        <button class="primary-button" type="submit" id="login-submit-button">로그인</button>
+      </form>
+
+      <form class="modal-form is-hidden" id="slot-reserve-form">
+        <label class="field is-hidden" id="reserve-room-field">
+          <span>예약 계정</span>
+          <select id="reserve-room-id" name="reserveRoomId"></select>
+        </label>
+        <label class="field">
+          <span>메모</span>
+          <textarea id="reserve-note" rows="4" maxlength="80" placeholder="선택한 슬롯에 동일하게 남길 메모"></textarea>
+        </label>
+        <button class="primary-button" type="submit" id="reserve-submit-button">예약 확정</button>
+      </form>
+
+      <div class="modal-actions is-hidden" id="modal-booking-actions">
+        <button class="danger-button" type="button" id="cancel-booking-button">취소 확정</button>
+      </div>
+
+      <p class="modal-status" id="modal-status" role="status" aria-live="polite"></p>
+
+      <div class="modal-footer">
+        <button class="secondary-button is-hidden" type="button" id="modal-logout-button">로그아웃</button>
+        <button class="secondary-button" type="button" id="modal-dismiss-button">닫기</button>
+      </div>
+    </section>
+  </div>
+</body>
+</html>
