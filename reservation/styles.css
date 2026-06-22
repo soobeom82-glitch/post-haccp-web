@@ -369,12 +369,18 @@ button {
   cursor: default;
 }
 
-.session-trigger.is-admin {
-  cursor: pointer;
+.admin-entry-button {
+  min-height: 42px;
+  padding: 0 14px;
+  border: 1px solid rgba(18, 108, 72, 0.22);
+  border-radius: 14px;
+  background: rgba(231, 245, 238, 0.96);
+  color: var(--brand-strong);
+  font-weight: 800;
 }
 
-.session-trigger.is-admin:hover {
-  border-color: rgba(18, 108, 72, 0.22);
+.admin-entry-button:hover:not(:disabled) {
+  transform: translateY(-1px);
   box-shadow: 0 10px 24px rgba(18, 108, 72, 0.08);
 }
 
@@ -481,11 +487,6 @@ button {
   color: var(--danger);
 }
 
-.admin-account-badge.is-reset {
-  background: rgba(255, 243, 198, 0.9);
-  color: #8f6a08;
-}
-
 .admin-account-actions {
   display: flex;
   align-items: center;
@@ -501,10 +502,6 @@ button {
   color: var(--ink);
   font-size: 0.78rem;
   font-weight: 800;
-}
-
-.admin-account-button.is-danger {
-  color: var(--danger);
 }
 
 .admin-account-button:disabled {

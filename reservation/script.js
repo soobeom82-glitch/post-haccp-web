@@ -113,6 +113,7 @@ const elements = {
   sessionChip: document.querySelector("#session-chip"),
   sessionChipMain: document.querySelector("#session-chip-main"),
   sessionChipDetail: document.querySelector("#session-chip-detail"),
+  adminMenuButton: document.querySelector("#admin-menu-button"),
   adminMenu: document.querySelector("#admin-menu"),
   adminMenuList: document.querySelector("#admin-menu-list"),
   adminMenuStatus: document.querySelector("#admin-menu-status"),
@@ -515,19 +516,18 @@ const renderLoginAccountChips = () => {
 
 const closeAdminMenu = () => {
   state.adminMenuOpen = false;
-  elements.sessionChip.setAttribute("aria-expanded", "false");
+  elements.adminMenuButton.setAttribute("aria-expanded", "false");
   elements.adminMenu.classList.add("is-hidden");
   setAdminMenuStatus("");
 };
 
 const renderAdminMenu = () => {
   const canManageAccounts = state.authenticated && state.isAdmin;
-
-  elements.sessionChip.classList.toggle("is-admin", canManageAccounts);
+  elements.adminMenuButton.classList.toggle("is-hidden", !canManageAccounts);
 
   if (!canManageAccounts) {
     state.adminMenuOpen = false;
-    elements.sessionChip.setAttribute("aria-expanded", "false");
+    elements.adminMenuButton.setAttribute("aria-expanded", "false");
     elements.adminMenu.classList.add("is-hidden");
     setAdminMenuStatus("");
     return;
@@ -542,9 +542,7 @@ const renderAdminMenu = () => {
     const actions = document.createElement("div");
     const title = document.createElement("strong");
     const activeBadge = document.createElement("span");
-    const resetBadge = document.createElement("span");
     const toggleButton = document.createElement("button");
-    const resetButton = document.createElement("button");
     const isBusy = state.adminMenuBusyRoomId === account.roomId;
 
     row.className = "admin-account-row";
@@ -556,12 +554,6 @@ const renderAdminMenu = () => {
     activeBadge.className = `admin-account-badge${account.isActive ? "" : " is-inactive"}`;
     activeBadge.textContent = account.isActive ? "활성" : "비활성";
     meta.appendChild(activeBadge);
-
-    if (account.pinResetRequired) {
-      resetBadge.className = "admin-account-badge is-reset";
-      resetBadge.textContent = "초기화 대기";
-      meta.appendChild(resetBadge);
-    }
 
     toggleButton.type = "button";
     toggleButton.className = "admin-account-button";
@@ -595,43 +587,15 @@ const renderAdminMenu = () => {
       }
     });
 
-    resetButton.type = "button";
-    resetButton.className = "admin-account-button is-danger";
-    resetButton.textContent = "비밀번호 초기화";
-    resetButton.disabled = isBusy;
-    resetButton.addEventListener("click", async () => {
-      state.adminMenuBusyRoomId = account.roomId;
-      renderAdminMenu();
-      setAdminMenuStatus(`${account.roomId} 비밀번호를 초기화하는 중입니다.`);
-
-      try {
-        await fetchJson("/api/reservation/accounts", {
-          method: "PATCH",
-          body: JSON.stringify({
-            roomId: account.roomId,
-            resetPin: true
-          })
-        });
-        await hydrateSession();
-        setAdminMenuStatus(`${account.roomId} 비밀번호를 초기화했습니다. 다음 로그인 시 새 비밀번호를 설정합니다.`, "success");
-      } catch (error) {
-        setAdminMenuStatus(error.message, "error");
-      } finally {
-        state.adminMenuBusyRoomId = "";
-        renderAdminMenu();
-      }
-    });
-
     info.appendChild(title);
     info.appendChild(meta);
     actions.appendChild(toggleButton);
-    actions.appendChild(resetButton);
     row.appendChild(info);
     row.appendChild(actions);
     elements.adminMenuList.appendChild(row);
   });
 
-  elements.sessionChip.setAttribute("aria-expanded", state.adminMenuOpen ? "true" : "false");
+  elements.adminMenuButton.setAttribute("aria-expanded", state.adminMenuOpen ? "true" : "false");
   elements.adminMenu.classList.toggle("is-hidden", !state.adminMenuOpen);
 };
 
@@ -1450,7 +1414,7 @@ elements.loginAccountList.addEventListener("pointerup", (event) => {
   selectLoginAccount(String(chip.dataset.roomId || ""));
 });
 
-elements.sessionChip.addEventListener("click", (event) => {
+elements.adminMenuButton.addEventListener("click", (event) => {
   event.stopPropagation();
   toggleAdminMenu();
 });
@@ -1488,7 +1452,7 @@ document.addEventListener("click", (event) => {
     return;
   }
 
-  if (elements.adminMenu.contains(event.target) || elements.sessionChip.contains(event.target)) {
+  if (elements.adminMenu.contains(event.target) || elements.adminMenuButton.contains(event.target)) {
     return;
   }
 
