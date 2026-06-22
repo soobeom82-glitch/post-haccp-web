@@ -1,7 +1,6 @@
 const {
   ensureTables,
   listReservationAccountSettings,
-  setReservationAccountActive,
   setReservationAccountPinResetRequired
 } = require("../_lib/db");
 const {
@@ -63,11 +62,7 @@ module.exports = async (req, res) => {
       return;
     }
 
-    if (typeof payload.isActive === "boolean") {
-      await setReservationAccountActive(roomId, payload.isActive);
-    }
-
-    if (payload.resetPin === true) {
+    if (payload.resetPin === true || payload.isActive === false) {
       await setReservationAccountPinResetRequired(roomId, true);
     }
 

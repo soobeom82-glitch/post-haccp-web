@@ -204,7 +204,7 @@ const normalizeLoginAccounts = (loginAccounts) => {
 
 const getRoomOptionsFromAccountSettings = (accountSettings) => [
   ...accountSettings
-    .filter((account) => account.isActive && account.hasPassword && !account.pinResetRequired)
+    .filter((account) => account.isActive)
     .map((account) => account.roomId),
   "관리자"
 ];
@@ -213,11 +213,7 @@ const getLoginAccountByRoomId = (roomId) =>
   state.loginAccounts.find((account) => account.roomId === roomId) || null;
 
 const syncLoginFormAvailability = (selectedAccount) => {
-  const canProceed = Boolean(
-    selectedAccount
-    && selectedAccount.isActive
-    && (selectedAccount.canLogin || selectedAccount.needsSetup)
-  );
+  const canProceed = Boolean(selectedAccount && (selectedAccount.canLogin || selectedAccount.needsSetup));
 
   elements.loginPin.disabled = !canProceed;
   elements.loginPin.required = canProceed;
@@ -232,7 +228,7 @@ const selectLoginAccount = (roomId) => {
     return;
   }
 
-  const needsSetup = Boolean(selectedAccount.isActive && selectedAccount.needsSetup);
+  const needsSetup = Boolean(selectedAccount.needsSetup);
 
   elements.loginRoomId.value = roomId;
   state.setupRequired = needsSetup;
@@ -248,7 +244,7 @@ const selectLoginAccount = (roomId) => {
   syncLoginFormAvailability(selectedAccount);
   setModalStatus("");
   renderLoginAccountChips();
-  if (selectedAccount.isActive && (selectedAccount.canLogin || needsSetup)) {
+  if (selectedAccount.canLogin || needsSetup) {
     elements.loginPin.focus();
   }
 };
@@ -553,21 +549,14 @@ const renderLoginAccountChips = () => {
     const roomId = account.roomId;
     const chip = document.createElement("button");
     const isSelected = elements.loginRoomId.value === roomId;
-    const isInactive = roomId !== "관리자" && !account.isActive;
     const canLogin = account.canLogin;
-    const needsSetup = account.isActive && account.needsSetup;
-    const chipStatusLabel = canLogin ? "활성" : needsSetup ? "활성화 필요" : "비활성";
+    const chipStatusLabel = canLogin ? "활성" : "비활성";
 
     chip.type = "button";
     chip.className = `account-chip-button${isSelected ? " is-selected" : ""}`;
     if (canLogin) {
       chip.classList.add("is-active");
-    } else if (needsSetup) {
-      chip.classList.add("is-pending");
     } else {
-      chip.classList.add("is-disabled");
-    }
-    if (isInactive) {
       chip.classList.add("is-disabled");
     }
     chip.innerHTML = `<strong>${roomId}</strong><small>${chipStatusLabel}</small>`;
@@ -598,9 +587,7 @@ const renderAdminMenu = () => {
   }
 
   elements.adminMenuList.innerHTML = "";
-  const visibleAccounts = state.accountSettings.filter(
-    (account) => account.isActive && account.hasPassword && !account.pinResetRequired
-  );
+  const visibleAccounts = state.accountSettings.filter((account) => account.isActive);
 
   if (!visibleAccounts.length) {
     setAdminMenuStatus("표시할 활성 계정이 없습니다.");
@@ -612,7 +599,6 @@ const renderAdminMenu = () => {
     const meta = document.createElement("div");
     const actions = document.createElement("div");
     const title = document.createElement("strong");
-    const activeBadge = document.createElement("span");
     const toggleButton = document.createElement("button");
     const isBusy = state.adminMenuBusyRoomId === account.roomId;
 
@@ -621,33 +607,30 @@ const renderAdminMenu = () => {
     meta.className = "admin-account-meta";
     actions.className = "admin-account-actions";
     title.textContent = account.roomId;
-
-    activeBadge.className = `admin-account-badge${account.isActive ? "" : " is-inactive"}`;
-    activeBadge.textContent = account.isActive ? "활성" : "비활성";
-    meta.appendChild(activeBadge);
+    meta.textContent = "활성";
 
     toggleButton.type = "button";
     toggleButton.className = "admin-account-button";
-    toggleButton.textContent = account.isActive ? "비활성화" : "활성화";
+    toggleButton.textContent = "비활성화";
     toggleButton.disabled = isBusy;
     toggleButton.addEventListener("click", async () => {
       state.adminMenuBusyRoomId = account.roomId;
       renderAdminMenu();
-      setAdminMenuStatus(`${account.roomId} 계정을 ${account.isActive ? "비활성화" : "활성화"}하는 중입니다.`);
+      setAdminMenuStatus(`${account.roomId} 계정 비밀번호를 초기화하는 중입니다.`);
 
       try {
         await fetchJson("/api/reservation/accounts", {
           method: "PATCH",
           body: JSON.stringify({
             roomId: account.roomId,
-            isActive: !account.isActive
+            isActive: false
           })
         });
         await hydrateSession();
         renderActionBar();
         renderActionModal();
         setAdminMenuStatus(
-          `${account.roomId} 계정을 ${account.isActive ? "비활성화" : "활성화"}했습니다.`,
+          `${account.roomId} 계정을 비활성화했습니다. 다음 로그인 시 비밀번호를 다시 설정합니다.`,
           "success"
         );
       } catch (error) {
@@ -1068,9 +1051,9 @@ const renderActionModal = () => {
 
   if (state.pendingAction === "login") {
     const selectedAccount = getLoginAccountByRoomId(String(elements.loginRoomId.value || "").trim());
-    const needsSetup = Boolean(selectedAccount && selectedAccount.isActive && selectedAccount.needsSetup);
+    const needsSetup = Boolean(selectedAccount && selectedAccount.needsSetup);
     const selectedAccountIsDisabled = Boolean(
-      selectedAccount && (!selectedAccount.isActive || (!selectedAccount.canLogin && !needsSetup))
+      selectedAccount && !selectedAccount.canLogin && !needsSetup
     );
 
     state.setupRequired = needsSetup;

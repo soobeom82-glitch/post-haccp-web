@@ -53,12 +53,6 @@ module.exports = async (req, res) => {
   try {
     await ensureTables();
     const accountSetting = !isAdminRoomId(roomId) ? await getReservationAccountSetting(roomId) : null;
-
-    if (accountSetting && !accountSetting.isActive) {
-      sendJson(res, 403, { message: "비활성화된 계정입니다. 관리자에게 문의해주세요." });
-      return;
-    }
-
     const existingUser = await getReservationUser(roomId);
 
     if (!existingUser || (accountSetting && accountSetting.pinResetRequired)) {

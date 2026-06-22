@@ -486,8 +486,7 @@ const countActiveReservationUsers = async () => {
     FROM reservation_account_settings account_settings
     INNER JOIN reservation_users users
       ON users.room_id = account_settings.room_id
-    WHERE account_settings.is_active = TRUE
-      AND account_settings.pin_reset_required = FALSE
+    WHERE account_settings.pin_reset_required = FALSE
   `;
 
   return Number(rows[0] ? rows[0].total : 0);

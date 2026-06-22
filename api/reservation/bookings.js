@@ -142,20 +142,12 @@ const validateTargetAccount = async (roomId) => {
   }
 
   const accountSetting = await getReservationAccountSetting(roomId);
-
-  if (!accountSetting.isActive) {
-    return {
-      allowed: false,
-      message: "비활성화된 계정에는 예약할 수 없습니다."
-    };
-  }
-
   const existingUser = await getReservationUser(roomId);
 
   if (!existingUser || accountSetting.pinResetRequired) {
     return {
       allowed: false,
-      message: "가입이 완료된 활성 계정에만 예약할 수 있습니다."
+      message: "활성화된 계정에만 예약할 수 있습니다."
     };
   }
 
