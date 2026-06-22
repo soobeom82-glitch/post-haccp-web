@@ -1028,9 +1028,9 @@ const renderActionBar = () => {
   } else if (allBooked) {
     elements.actionSummaryDetail.textContent = state.isAdmin
       ? "선택한 예약을 취소하거나 다른 계정으로 수정할 수 있습니다."
-      : "선택한 예약을 취소합니다.";
+      : "선택한 예약을 예약 취소합니다.";
     elements.bulkCancelButton.classList.remove("is-hidden");
-    elements.bulkCancelButton.textContent = state.authenticated ? "취소" : "로그인 후 취소";
+    elements.bulkCancelButton.textContent = state.authenticated ? "예약 취소" : "로그인 후 예약 취소";
     if (state.isAdmin) {
       elements.bulkModifyButton.classList.remove("is-hidden");
       elements.bulkModifyButton.textContent = "수정";
@@ -1189,7 +1189,7 @@ const renderActionModal = () => {
 
   if (state.pendingAction === "cancel") {
     const selectedCount = getSelectionEntries().length;
-    elements.modalInfoTitle.textContent = "취소";
+    elements.modalInfoTitle.textContent = "예약 취소";
 
     if (mode !== "booked") {
       elements.modalInfoText.textContent = "예약된 슬롯만 선택해주세요.";
@@ -1206,10 +1206,10 @@ const renderActionModal = () => {
     if (cancellableEntries.length !== selectedCount) {
       elements.modalInfoText.textContent = `${selectedCount}개 중 ${cancellableEntries.length}개만 ${state.roomId} 예약이라 취소됩니다.`;
     } else {
-      elements.modalInfoText.textContent = `${cancellableEntries.length}개 슬롯을 취소합니다.`;
+      elements.modalInfoText.textContent = `${cancellableEntries.length}개 슬롯을 예약 취소합니다.`;
     }
 
-    elements.cancelBookingButton.textContent = `${cancellableEntries.length}개 취소 확정`;
+    elements.cancelBookingButton.textContent = `${cancellableEntries.length}개 예약 취소 확정`;
     elements.modalBookingActions.classList.remove("is-hidden");
   }
 };
