@@ -748,8 +748,8 @@ const showModal = () => {
 
 const renderSessionStrip = () => {
   if (state.authenticated && state.roomId && state.expiresAt) {
-    elements.sessionChipMain.textContent = state.isAdmin ? `${state.roomId} 계정` : state.roomId;
-    elements.sessionChipDetail.textContent = `세션 만료까지 ${formatRemainingTime(state.expiresAt)}`;
+    elements.sessionChipMain.textContent = `${state.roomId} (${formatRemainingTime(state.expiresAt)})`;
+    elements.sessionChipDetail.textContent = "";
     elements.sessionChip.classList.remove("is-hidden");
     elements.headerLoginButton.classList.add("is-hidden");
     elements.headerLogoutButton.classList.remove("is-hidden");
@@ -773,7 +773,8 @@ const updateSessionCountdown = () => {
     return;
   }
 
-  elements.sessionChipDetail.textContent = `세션 만료까지 ${formatRemainingTime(state.expiresAt)}`;
+  elements.sessionChipMain.textContent = `${state.roomId} (${formatRemainingTime(state.expiresAt)})`;
+  elements.sessionChipDetail.textContent = "";
 };
 
 const startSessionCountdown = () => {
