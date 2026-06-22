@@ -546,8 +546,13 @@ const renderAdminMenu = () => {
   }
 
   elements.adminMenuList.innerHTML = "";
+  const visibleAccounts = state.accountSettings.filter((account) => account.isActive);
 
-  state.accountSettings.forEach((account) => {
+  if (!visibleAccounts.length) {
+    setAdminMenuStatus("표시할 활성 계정이 없습니다.");
+  }
+
+  visibleAccounts.forEach((account) => {
     const row = document.createElement("div");
     const info = document.createElement("div");
     const meta = document.createElement("div");
