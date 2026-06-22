@@ -120,6 +120,7 @@ const elements = {
   boardStatusChip: document.querySelector("#board-status-chip"),
   boardStatusMain: document.querySelector("#board-status-main"),
   boardStatusDetail: document.querySelector("#board-status-detail"),
+  headerLoginButton: document.querySelector("#header-login-button"),
   headerLogoutButton: document.querySelector("#header-logout-button"),
   currentTimeLine: document.querySelector("#current-time-line"),
   currentTimeLabel: document.querySelector("#current-time-label"),
@@ -672,9 +673,11 @@ const renderSessionStrip = () => {
     elements.sessionChipMain.textContent = state.isAdmin ? `${state.roomId} 계정` : state.roomId;
     elements.sessionChipDetail.textContent = `세션 만료까지 ${formatRemainingTime(state.expiresAt)}`;
     elements.sessionChip.classList.remove("is-hidden");
+    elements.headerLoginButton.classList.add("is-hidden");
     elements.headerLogoutButton.classList.remove("is-hidden");
   } else {
     elements.sessionChip.classList.add("is-hidden");
+    elements.headerLoginButton.classList.remove("is-hidden");
     elements.headerLogoutButton.classList.add("is-hidden");
   }
 
@@ -1495,6 +1498,7 @@ elements.slotReserveForm.addEventListener("submit", async (event) => {
 });
 
 elements.cancelBookingButton.addEventListener("click", submitBulkCancel);
+elements.headerLoginButton.addEventListener("click", openLoginPrompt);
 elements.headerLogoutButton.addEventListener("click", () => performLogout());
 elements.modalCloseButton.addEventListener("click", closeModal);
 if (elements.modalDismissButton) {
