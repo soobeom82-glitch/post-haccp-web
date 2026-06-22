@@ -958,7 +958,7 @@ const renderActionModal = () => {
       elements.reserveRoomField.classList.remove("is-hidden");
       elements.reserveRoomId.value = elements.reserveRoomId.value || state.roomId;
     }
-    elements.reserveSubmitButton.textContent = "예약 하기";
+    elements.reserveSubmitButton.textContent = `${selectedCount}시간 예약하기`;
     elements.slotReserveForm.classList.remove("is-hidden");
     return;
   }
