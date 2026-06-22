@@ -22,7 +22,15 @@
         <button class="today-button" type="button" id="today-button">이번 주</button>
         <button class="nav-button" type="button" id="next-week-button" aria-label="다음 주">›</button>
       </div>
-      <strong class="week-range-label" id="week-range-label">이번 주</strong>
+      <div class="week-range-group">
+        <strong class="week-range-label" id="week-range-label">이번 주</strong>
+        <button class="icon-button refresh-button" type="button" id="refresh-board-button" aria-label="새로고침">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M20 12a8 8 0 1 1-2.34-5.66"/>
+            <path d="M20 4v6h-6"/>
+          </svg>
+        </button>
+      </div>
       <div class="toolbar-status">
         <button class="status-chip session-trigger is-hidden" type="button" id="session-chip" aria-expanded="false">
           <span class="status-chip-label">로그인 계정</span>

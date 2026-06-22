@@ -100,8 +100,16 @@ button {
   letter-spacing: -0.03em;
 }
 
+.week-range-group {
+  justify-self: center;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .nav-button,
 .today-button,
+.icon-button,
 .logout-button,
 .primary-button,
 .secondary-button,
@@ -115,6 +123,7 @@ button {
 
 .nav-button,
 .today-button,
+.icon-button,
 .logout-button,
 .secondary-button,
 .modal-close-button {
@@ -128,6 +137,24 @@ button {
   padding: 0;
   font-size: 1.35rem;
   line-height: 1;
+}
+
+.icon-button {
+  width: 42px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-button svg {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  stroke-width: 2;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .today-button,
@@ -153,6 +180,7 @@ button {
 
 .nav-button:hover:not(:disabled),
 .today-button:hover:not(:disabled),
+.icon-button:hover:not(:disabled),
 .logout-button:hover:not(:disabled),
 .primary-button:hover:not(:disabled),
 .secondary-button:hover:not(:disabled),
@@ -780,6 +808,10 @@ button {
   }
 
   .week-range-label {
+    justify-self: start;
+  }
+
+  .week-range-group {
     justify-self: start;
   }
 

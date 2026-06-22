@@ -110,6 +110,7 @@ const elements = {
   prevWeekButton: document.querySelector("#prev-week-button"),
   nextWeekButton: document.querySelector("#next-week-button"),
   todayButton: document.querySelector("#today-button"),
+  refreshBoardButton: document.querySelector("#refresh-board-button"),
   sessionChip: document.querySelector("#session-chip"),
   sessionChipMain: document.querySelector("#session-chip-main"),
   sessionChipDetail: document.querySelector("#session-chip-detail"),
@@ -799,6 +800,20 @@ const refreshBookings = async (showErrorChip = true) => {
   }
 };
 
+const refreshBoardData = async () => {
+  elements.refreshBoardButton.disabled = true;
+
+  try {
+    await hydrateSession();
+    await refreshBookings();
+    renderCalendar();
+    renderActionBar();
+    renderActionModal();
+  } finally {
+    elements.refreshBoardButton.disabled = false;
+  }
+};
+
 const buildDayHeader = (dateKey) => {
   const date = dateKeyToDate(dateKey);
   const header = document.createElement("div");
@@ -1464,6 +1479,8 @@ elements.todayButton.addEventListener("click", async () => {
   await refreshBookings();
   renderCalendar();
 });
+
+elements.refreshBoardButton.addEventListener("click", refreshBoardData);
 
 elements.clearSelectionButton.addEventListener("click", () => {
   clearSelection();
