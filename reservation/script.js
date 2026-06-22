@@ -76,7 +76,6 @@ const elements = {
   slotModalTitle: document.querySelector("#slot-modal-title"),
   modalCloseButton: document.querySelector("#modal-close-button"),
   modalDismissButton: document.querySelector("#modal-dismiss-button"),
-  modalLogoutButton: document.querySelector("#modal-logout-button"),
   slotSummaryCard: document.querySelector("#slot-summary-card"),
   slotSummaryLabel: document.querySelector("#slot-summary-label"),
   slotSummarySubtext: document.querySelector("#slot-summary-subtext"),
@@ -285,11 +284,8 @@ const formatRemainingTime = (expiresAt) => {
   return `${minutesPart}:${secondsPart}`;
 };
 
-const createSlotDate = (dateKey, hour) => {
-  const date = new Date(`${dateKey}T00:00:00+09:00`);
-  date.setHours(hour, 0, 0, 0);
-  return date;
-};
+const createSlotDate = (dateKey, hour) =>
+  new Date(`${dateKey}T${String(hour).padStart(2, "0")}:00:00+09:00`);
 
 const isPastSlot = (dateKey, hour) => createSlotDate(dateKey, hour) <= new Date();
 
@@ -613,11 +609,9 @@ const renderSessionStrip = () => {
     elements.sessionChipDetail.textContent = `세션 만료까지 ${formatRemainingTime(state.expiresAt)}`;
     elements.sessionChip.classList.remove("is-hidden");
     elements.headerLogoutButton.classList.remove("is-hidden");
-    elements.modalLogoutButton.classList.remove("is-hidden");
   } else {
     elements.sessionChip.classList.add("is-hidden");
     elements.headerLogoutButton.classList.add("is-hidden");
-    elements.modalLogoutButton.classList.add("is-hidden");
   }
 
   renderAdminMenu();
@@ -1149,6 +1143,7 @@ const submitBulkReserve = async () => {
 
   let successCount = 0;
   let failureCount = 0;
+  let lastErrorMessage = "";
 
   for (const entry of entries) {
     try {
@@ -1164,6 +1159,7 @@ const submitBulkReserve = async () => {
       successCount += 1;
     } catch (error) {
       failureCount += 1;
+      lastErrorMessage = error instanceof Error ? error.message : "예약에 실패했습니다.";
     }
   }
 
@@ -1181,11 +1177,11 @@ const submitBulkReserve = async () => {
   }
 
   if (successCount) {
-    setModalStatus(`${successCount}개 예약, ${failureCount}개 실패`, "error");
+    setModalStatus(`${successCount}개 예약, ${failureCount}개 실패${lastErrorMessage ? ` · ${lastErrorMessage}` : ""}`, "error");
     return;
   }
 
-  setModalStatus("예약에 실패했습니다.", "error");
+  setModalStatus(lastErrorMessage || "예약에 실패했습니다.", "error");
 };
 
 const submitBulkModify = async () => {
@@ -1206,6 +1202,7 @@ const submitBulkModify = async () => {
 
   let successCount = 0;
   let failureCount = 0;
+  let lastErrorMessage = "";
 
   for (const entry of entries) {
     try {
@@ -1222,6 +1219,7 @@ const submitBulkModify = async () => {
       successCount += 1;
     } catch (error) {
       failureCount += 1;
+      lastErrorMessage = error instanceof Error ? error.message : "수정에 실패했습니다.";
     }
   }
 
@@ -1239,11 +1237,11 @@ const submitBulkModify = async () => {
   }
 
   if (successCount) {
-    setModalStatus(`${successCount}개 수정, ${failureCount}개 실패`, "error");
+    setModalStatus(`${successCount}개 수정, ${failureCount}개 실패${lastErrorMessage ? ` · ${lastErrorMessage}` : ""}`, "error");
     return;
   }
 
-  setModalStatus("수정에 실패했습니다.", "error");
+  setModalStatus(lastErrorMessage || "수정에 실패했습니다.", "error");
 };
 
 const submitBulkCancel = async () => {
@@ -1258,6 +1256,7 @@ const submitBulkCancel = async () => {
 
   let successCount = 0;
   let failureCount = 0;
+  let lastErrorMessage = "";
 
   for (const entry of cancellableEntries) {
     try {
@@ -1268,6 +1267,7 @@ const submitBulkCancel = async () => {
       successCount += 1;
     } catch (error) {
       failureCount += 1;
+      lastErrorMessage = error instanceof Error ? error.message : "취소에 실패했습니다.";
     }
   }
 
@@ -1282,11 +1282,11 @@ const submitBulkCancel = async () => {
   }
 
   if (successCount) {
-    setModalStatus(`${successCount}개 취소, ${failureCount}개 실패`, "error");
+    setModalStatus(`${successCount}개 취소, ${failureCount}개 실패${lastErrorMessage ? ` · ${lastErrorMessage}` : ""}`, "error");
     return;
   }
 
-  setModalStatus("취소에 실패했습니다.", "error");
+  setModalStatus(lastErrorMessage || "취소에 실패했습니다.", "error");
 };
 
 const setWeekFromDate = (dateKey) => {
@@ -1398,9 +1398,10 @@ elements.slotReserveForm.addEventListener("submit", async (event) => {
 
 elements.cancelBookingButton.addEventListener("click", submitBulkCancel);
 elements.headerLogoutButton.addEventListener("click", () => performLogout());
-elements.modalLogoutButton.addEventListener("click", () => performLogout());
 elements.modalCloseButton.addEventListener("click", closeModal);
-elements.modalDismissButton.addEventListener("click", closeModal);
+if (elements.modalDismissButton) {
+  elements.modalDismissButton.addEventListener("click", closeModal);
+}
 
 elements.modalBackdrop.addEventListener("click", (event) => {
   if (event.target === elements.modalBackdrop) {

@@ -201,17 +201,11 @@ const formatDateKeyKst = (date = new Date()) => {
 
 const isValidDateKey = (dateKey) => /^\d{4}-\d{2}-\d{2}$/.test(dateKey);
 
-const getSlotStartDate = (dateKey, slotHour) => {
-  const date = new Date(`${dateKey}T00:00:00+09:00`);
-  date.setHours(slotHour, 0, 0, 0);
-  return date;
-};
+const getSlotStartDate = (dateKey, slotHour) =>
+  new Date(`${dateKey}T${String(slotHour).padStart(2, "0")}:00:00+09:00`);
 
-const getSlotEndDate = (dateKey, slotHour) => {
-  const date = getSlotStartDate(dateKey, slotHour);
-  date.setHours(date.getHours() + 1);
-  return date;
-};
+const getSlotEndDate = (dateKey, slotHour) =>
+  new Date(getSlotStartDate(dateKey, slotHour).getTime() + 60 * 60 * 1000);
 
 module.exports = {
   ADMIN_ROOM_ID,
