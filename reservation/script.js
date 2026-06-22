@@ -482,9 +482,17 @@ const getSelectionMode = () => {
     return "none";
   }
 
-  const kinds = new Set(
-    entries.map((entry) => (entry.status === "available" ? "available" : entry.status === "past" ? "past" : "booked"))
-  );
+  const kinds = new Set(entries.map((entry) => {
+    if (entry.booking) {
+      return "booked";
+    }
+
+    if (entry.status === "available") {
+      return "available";
+    }
+
+    return "past";
+  }));
 
   if (kinds.size > 1) {
     return "mixed";
