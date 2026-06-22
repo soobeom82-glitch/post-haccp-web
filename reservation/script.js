@@ -458,7 +458,7 @@ const clearSelection = () => {
   renderCalendar();
 };
 
-const openLoginPrompt = () => {
+const openLoginPrompt = async () => {
   closeAdminMenu();
   elements.loginRoomId.value = "";
   elements.loginPin.value = "";
@@ -470,6 +470,18 @@ const openLoginPrompt = () => {
   state.pendingAction = "login";
   renderActionModal();
   showModal();
+
+  setModalStatus("계정 상태를 확인하는 중입니다.");
+
+  try {
+    const data = await fetchJson("/api/reservation/session");
+    syncSessionFromPayload(data);
+    renderActionModal();
+    setModalStatus("");
+  } catch (error) {
+    renderActionModal();
+    setModalStatus("계정 상태를 새로 불러오지 못했습니다.", "error");
+  }
 };
 
 const toggleSelection = (dateKey, slotHour) => {
