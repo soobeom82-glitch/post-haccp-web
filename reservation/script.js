@@ -496,6 +496,10 @@ const getSelectionMode = () => {
 const isSelected = (key) => state.selectedKeys.includes(key);
 
 const canSelectSlot = (status, booking) => {
+  if (state.isAdmin) {
+    return true;
+  }
+
   if (status === "past") {
     return false;
   }
@@ -1019,6 +1023,8 @@ const renderActionBar = () => {
       elements.bulkModifyButton.classList.remove("is-hidden");
       elements.bulkModifyButton.textContent = "수정";
     }
+  } else if (mode === "past" && state.isAdmin) {
+    elements.actionSummaryDetail.textContent = "관리자는 지난 슬롯도 선택할 수 있습니다. 예약된 슬롯만 수정 또는 취소할 수 있습니다.";
   } else {
     elements.actionSummaryDetail.textContent = "예약 가능 슬롯과 예약된 슬롯은 함께 선택할 수 없습니다.";
   }
