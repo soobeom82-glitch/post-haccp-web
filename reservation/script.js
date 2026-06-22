@@ -553,18 +553,24 @@ const renderLoginAccountChips = () => {
     const roomId = account.roomId;
     const chip = document.createElement("button");
     const isSelected = elements.loginRoomId.value === roomId;
-    const isDisabledByAdmin = roomId !== "관리자" && !account.isActive;
+    const isInactive = roomId !== "관리자" && !account.isActive;
     const canLogin = account.canLogin;
-    const needsSetup = account.needsSetup;
+    const needsSetup = account.isActive && account.needsSetup;
+    const chipStatusLabel = canLogin ? "활성" : needsSetup ? "활성화 필요" : "비활성";
 
     chip.type = "button";
     chip.className = `account-chip-button${isSelected ? " is-selected" : ""}`;
     if (canLogin) {
       chip.classList.add("is-active");
+    } else if (needsSetup) {
+      chip.classList.add("is-pending");
     } else {
-    chip.classList.add("is-disabled");
+      chip.classList.add("is-disabled");
     }
-    chip.innerHTML = `<strong>${roomId}</strong><small>${canLogin ? "활성" : "비활성"}</small>`;
+    if (isInactive) {
+      chip.classList.add("is-disabled");
+    }
+    chip.innerHTML = `<strong>${roomId}</strong><small>${chipStatusLabel}</small>`;
     chip.dataset.roomId = roomId;
     chip.setAttribute("role", "option");
     chip.setAttribute("aria-selected", isSelected ? "true" : "false");
