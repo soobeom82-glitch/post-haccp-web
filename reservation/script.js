@@ -212,7 +212,11 @@ const getLoginAccountByRoomId = (roomId) =>
   state.loginAccounts.find((account) => account.roomId === roomId) || null;
 
 const syncLoginFormAvailability = (selectedAccount) => {
-  const canProceed = Boolean(selectedAccount && (selectedAccount.canLogin || selectedAccount.needsSetup));
+  const canProceed = Boolean(
+    selectedAccount
+    && selectedAccount.isActive
+    && (selectedAccount.canLogin || selectedAccount.needsSetup)
+  );
 
   elements.loginPin.disabled = !canProceed;
   elements.loginPin.required = canProceed;
@@ -227,7 +231,7 @@ const selectLoginAccount = (roomId) => {
     return;
   }
 
-  const needsSetup = Boolean(selectedAccount.needsSetup);
+  const needsSetup = Boolean(selectedAccount.isActive && selectedAccount.needsSetup);
 
   elements.loginRoomId.value = roomId;
   state.setupRequired = needsSetup;
@@ -243,7 +247,7 @@ const selectLoginAccount = (roomId) => {
   syncLoginFormAvailability(selectedAccount);
   setModalStatus("");
   renderLoginAccountChips();
-  if (selectedAccount.canLogin || needsSetup) {
+  if (selectedAccount.isActive && (selectedAccount.canLogin || needsSetup)) {
     elements.loginPin.focus();
   }
 };
@@ -1043,8 +1047,10 @@ const renderActionModal = () => {
 
   if (state.pendingAction === "login") {
     const selectedAccount = getLoginAccountByRoomId(String(elements.loginRoomId.value || "").trim());
-    const needsSetup = Boolean(selectedAccount && selectedAccount.needsSetup);
-    const selectedAccountIsDisabled = Boolean(selectedAccount && !selectedAccount.canLogin);
+    const needsSetup = Boolean(selectedAccount && selectedAccount.isActive && selectedAccount.needsSetup);
+    const selectedAccountIsDisabled = Boolean(
+      selectedAccount && (!selectedAccount.isActive || (!selectedAccount.canLogin && !needsSetup))
+    );
 
     state.setupRequired = needsSetup;
     elements.slotModalTitle.textContent = "로그인";

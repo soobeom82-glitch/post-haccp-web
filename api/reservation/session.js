@@ -38,7 +38,7 @@ module.exports = async (req, res) => {
         pinResetRequired: false
       };
       const hasPassword = userRoomIds.has(roomId);
-      const needsSetup = !hasPassword || account.pinResetRequired;
+      const needsSetup = account.isActive && (!hasPassword || account.pinResetRequired);
       const canLogin = account.isActive && hasPassword && !account.pinResetRequired;
 
       return {
