@@ -398,12 +398,59 @@ const getRoomSlotColors = (roomId) =>
     note: "#5d675e"
   };
 
+const clampColorChannel = (value) => Math.max(0, Math.min(255, Math.round(value)));
+
+const hexToRgb = (hexColor) => {
+  const normalized = String(hexColor || "").replace("#", "");
+
+  if (!/^[0-9a-fA-F]{6}$/.test(normalized)) {
+    return null;
+  }
+
+  return {
+    red: Number.parseInt(normalized.slice(0, 2), 16),
+    green: Number.parseInt(normalized.slice(2, 4), 16),
+    blue: Number.parseInt(normalized.slice(4, 6), 16)
+  };
+};
+
+const rgbToHex = (red, green, blue) =>
+  `#${[red, green, blue]
+    .map((channel) => clampColorChannel(channel).toString(16).padStart(2, "0"))
+    .join("")}`;
+
+const mixHexColors = (sourceHex, targetHex, ratio) => {
+  const source = hexToRgb(sourceHex);
+  const target = hexToRgb(targetHex);
+
+  if (!source || !target) {
+    return sourceHex;
+  }
+
+  return rgbToHex(
+    source.red + (target.red - source.red) * ratio,
+    source.green + (target.green - source.green) * ratio,
+    source.blue + (target.blue - source.blue) * ratio
+  );
+};
+
+const getPastRoomSlotColors = (roomId) => {
+  const roomColors = getRoomSlotColors(roomId);
+
+  return {
+    bg: mixHexColors(roomColors.bg, "#ffffff", 0.38),
+    accent: mixHexColors(roomColors.accent, "#ffffff", 0.28),
+    text: mixHexColors(roomColors.text, "#ffffff", 0.18),
+    note: mixHexColors(roomColors.note, "#ffffff", 0.28)
+  };
+};
+
 const getSlotStatus = (dateKey, hour, booking) => {
   if (!booking) {
     return isPastSlot(dateKey, hour) ? "past" : "available";
   }
 
-  if (isPastSlot(dateKey, hour) && !state.isAdmin) {
+  if (isPastSlot(dateKey, hour)) {
     return booking.roomId === state.roomId ? "past-mine" : "past-booked";
   }
 
@@ -865,7 +912,7 @@ const renderCalendar = () => {
 
       if (isSelected(key)) {
         button.classList.add("is-selected");
-        if (status === "mine") {
+        if (status === "mine" || status === "past-mine") {
           button.classList.add("is-selected-mine");
         }
       }
@@ -874,10 +921,16 @@ const renderCalendar = () => {
         button.innerHTML = `<span class="available-text">예약 가능</span>`;
       } else if (status === "mine" || status === "taken" || status === "past-booked" || status === "past-mine") {
         const noteMarkup = booking && booking.note ? `<p>${booking.note}</p>` : "";
-        const roomColors = getRoomSlotColors(booking ? booking.roomId : "");
+        const isPastBooking = status === "past-booked" || status === "past-mine";
+        const roomColors = isPastBooking
+          ? getPastRoomSlotColors(booking ? booking.roomId : "")
+          : getRoomSlotColors(booking ? booking.roomId : "");
         button.classList.add("is-room-booked");
         if (status === "mine" || status === "past-mine") {
           button.classList.add("is-room-mine");
+        }
+        if (isPastBooking) {
+          button.classList.add("is-room-booked-past");
         }
         button.style.setProperty("--slot-room-bg", roomColors.bg);
         button.style.setProperty("--slot-room-accent", roomColors.accent);

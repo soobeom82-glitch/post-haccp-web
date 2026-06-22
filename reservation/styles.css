@@ -323,6 +323,13 @@ button {
   color: var(--slot-room-note);
 }
 
+.slot-button.is-room-booked-past {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.22)),
+    linear-gradient(90deg, var(--slot-room-accent) 0 7px, transparent 7px),
+    var(--slot-room-bg);
+}
+
 .slot-button.is-room-mine {
   box-shadow: inset 0 0 0 1px var(--slot-room-accent);
 }
