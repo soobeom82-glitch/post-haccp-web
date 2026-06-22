@@ -1426,10 +1426,14 @@ elements.loginAccountList.addEventListener("pointerup", (event) => {
   selectLoginAccount(String(chip.dataset.roomId || ""));
 });
 
-elements.adminMenuButton.addEventListener("click", (event) => {
+const handleAdminMenuButtonPress = (event) => {
+  event.preventDefault();
   event.stopPropagation();
   toggleAdminMenu();
-});
+};
+
+elements.adminMenuButton.addEventListener("pointerup", handleAdminMenuButtonPress);
+elements.adminMenuButton.addEventListener("click", handleAdminMenuButtonPress);
 
 elements.slotLoginForm.addEventListener("submit", async (event) => {
   event.preventDefault();
