@@ -1433,7 +1433,6 @@ const handleAdminMenuButtonPress = (event) => {
 };
 
 elements.adminMenuButton.addEventListener("pointerup", handleAdminMenuButtonPress);
-elements.adminMenuButton.addEventListener("click", handleAdminMenuButtonPress);
 
 elements.slotLoginForm.addEventListener("submit", async (event) => {
   event.preventDefault();
