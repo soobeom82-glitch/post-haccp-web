@@ -591,36 +591,52 @@ button {
 
 .action-bar {
   position: absolute;
-  left: 8px;
-  right: 8px;
-  bottom: 8px;
+  right: 12px;
+  bottom: 12px;
   z-index: 30;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  min-height: var(--actionbar-height);
-  padding: 8px 12px;
-  border: 1px solid rgba(255, 255, 255, 0.76);
-  border-radius: 22px;
-  background: var(--panel);
-  box-shadow: var(--shadow);
-  backdrop-filter: blur(10px);
+  display: grid;
+  justify-items: end;
+  gap: 8px;
+  pointer-events: none;
 }
 
 .action-summary {
-  display: grid;
-  gap: 2px;
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 0 12px;
+  border: 1px solid rgba(255, 255, 255, 0.82);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 10px 24px rgba(23, 34, 25, 0.12);
+  backdrop-filter: blur(10px);
+  pointer-events: auto;
 }
 
 .action-summary strong {
-  font-size: 0.95rem;
+  font-size: 0.82rem;
   font-weight: 800;
 }
 
 .action-summary span {
-  color: var(--ink-soft);
-  font-size: 0.76rem;
+  display: none;
+}
+
+.action-buttons {
+  display: grid;
+  justify-items: end;
+  gap: 8px;
+  pointer-events: auto;
+}
+
+.action-buttons .primary-button,
+.action-buttons .secondary-button,
+.action-buttons .danger-button {
+  min-width: 132px;
+  min-height: 46px;
+  padding: 0 16px;
+  border-radius: 999px;
+  box-shadow: 0 12px 28px rgba(23, 34, 25, 0.16);
 }
 
 .modal-backdrop {
@@ -833,6 +849,11 @@ button {
   .action-buttons,
   .modal-footer {
     flex-wrap: wrap;
+  }
+
+  .action-bar {
+    right: 10px;
+    bottom: 10px;
   }
 
   .admin-menu {
