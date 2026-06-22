@@ -1,5 +1,5 @@
 const DEFAULT_ROOM_OPTIONS = Array.from({ length: 8 }, (_, index) => `생산실${index + 1}`);
-const DEFAULT_HOURS = Array.from({ length: 24 }, (_, index) => index);
+const DEFAULT_HOURS = Array.from({ length: 16 }, (_, index) => index + 6);
 const DEFAULT_ACCOUNT_SETTINGS = DEFAULT_ROOM_OPTIONS.map((roomId) => ({
   roomId,
   isActive: true,
@@ -885,6 +885,8 @@ const buildDayHeader = (dateKey) => {
 const renderCalendar = () => {
   const bookingMap = getBookingMap();
   elements.calendarGrid.innerHTML = "";
+  elements.calendarGrid.style.gridTemplateRows =
+    `var(--calendar-header-height) repeat(${Math.max(state.hours.length, 1)}, minmax(0, 1fr))`;
 
   const weekEnd = state.weekDates[state.weekDates.length - 1];
   if (state.weekStart && weekEnd) {
@@ -971,8 +973,10 @@ const renderCalendar = () => {
 
 const positionCurrentTimeLine = () => {
   const todayIndex = state.weekDates.indexOf(state.today);
+  const firstHour = state.hours[0];
+  const lastHour = state.hours[state.hours.length - 1];
 
-  if (todayIndex === -1) {
+  if (todayIndex === -1 || typeof firstHour !== "number" || typeof lastHour !== "number") {
     elements.currentTimeLine.classList.add("is-hidden");
     return;
   }
@@ -980,12 +984,21 @@ const positionCurrentTimeLine = () => {
   const now = new Date();
   const hour = now.getHours();
   const minute = now.getMinutes();
+  const currentHourValue = hour + minute / 60;
+  const visibleStartHour = firstHour;
+  const visibleEndHour = lastHour + 1;
+
+  if (currentHourValue < visibleStartHour || currentHourValue >= visibleEndHour) {
+    elements.currentTimeLine.classList.add("is-hidden");
+    return;
+  }
+
   const stageHeight = elements.calendarStage.clientHeight;
   const styles = getComputedStyle(document.documentElement);
   const headerHeight = Number.parseFloat(styles.getPropertyValue("--calendar-header-height")) || 42;
   const timeColumnWidth = Number.parseFloat(styles.getPropertyValue("--time-column-width")) || 56;
   const bodyHeight = Math.max(stageHeight - headerHeight, 0);
-  const top = headerHeight + ((hour + minute / 60) / 24) * bodyHeight;
+  const top = headerHeight + ((currentHourValue - visibleStartHour) / (visibleEndHour - visibleStartHour)) * bodyHeight;
 
   elements.currentTimeLine.style.top = `${top}px`;
   elements.currentTimeLine.style.left = `${timeColumnWidth}px`;
