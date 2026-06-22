@@ -562,7 +562,9 @@ const renderAdminMenu = () => {
   }
 
   elements.adminMenuList.innerHTML = "";
-  const visibleAccounts = state.accountSettings.filter((account) => account.isActive);
+  const visibleAccounts = state.accountSettings.filter(
+    (account) => account.isActive && account.hasPassword && !account.pinResetRequired
+  );
 
   if (!visibleAccounts.length) {
     setAdminMenuStatus("표시할 활성 계정이 없습니다.");
