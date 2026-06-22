@@ -418,6 +418,22 @@ const getSelectionMode = () => {
 
 const isSelected = (key) => state.selectedKeys.includes(key);
 
+const canSelectSlot = (status, booking) => {
+  if (status === "past") {
+    return false;
+  }
+
+  if (status === "past-booked" || status === "past-mine") {
+    return state.isAdmin && Boolean(booking);
+  }
+
+  if (status === "taken") {
+    return !state.authenticated || state.isAdmin;
+  }
+
+  return true;
+};
+
 const clearSelection = () => {
   state.selectedKeys = [];
   state.pendingAction = "";
@@ -444,11 +460,7 @@ const toggleSelection = (dateKey, slotHour) => {
   const booking = getBookingMap().get(key) || null;
   const status = getSlotStatus(dateKey, slotHour, booking);
 
-  if (status === "past" || status === "past-booked" || status === "past-mine") {
-    return;
-  }
-
-  if (status === "taken" && state.authenticated && !state.isAdmin) {
+  if (!canSelectSlot(status, booking)) {
     return;
   }
 
@@ -818,7 +830,7 @@ const renderCalendar = () => {
         button.innerHTML = `<span class="past-text">.</span>`;
       }
 
-      if (status === "past" || status === "past-booked" || status === "past-mine") {
+      if (!canSelectSlot(status, booking)) {
         button.disabled = true;
       } else {
         button.addEventListener("click", () => {
