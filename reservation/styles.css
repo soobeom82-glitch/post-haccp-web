@@ -277,6 +277,25 @@ button {
   background: var(--past);
 }
 
+.slot-button.is-room-booked {
+  border-color: var(--slot-room-accent);
+  background:
+    linear-gradient(90deg, var(--slot-room-accent) 0 7px, transparent 7px),
+    var(--slot-room-bg);
+}
+
+.slot-button.is-room-booked strong {
+  color: var(--slot-room-text);
+}
+
+.slot-button.is-room-booked p {
+  color: var(--slot-room-note);
+}
+
+.slot-button.is-room-mine {
+  box-shadow: inset 0 0 0 1px var(--slot-room-accent);
+}
+
 .slot-button.is-today-col {
   box-shadow: inset 0 0 0 1px rgba(32, 143, 99, 0.05);
 }
@@ -289,6 +308,11 @@ button {
 .slot-button.is-selected-mine {
   border-color: rgba(146, 110, 0, 0.48);
   box-shadow: inset 0 0 0 1px rgba(146, 110, 0, 0.2);
+}
+
+.slot-button.is-selected.is-room-booked {
+  border-color: var(--slot-room-accent);
+  box-shadow: inset 0 0 0 2px var(--slot-room-accent);
 }
 
 .slot-button:disabled {

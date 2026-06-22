@@ -22,6 +22,63 @@ const DEFAULT_LOGIN_ACCOUNTS = [
   }
 ];
 
+const ROOM_SLOT_COLORS = {
+  생산실1: {
+    bg: "#d8efff",
+    accent: "#4d96d9",
+    text: "#184867",
+    note: "#3a6885"
+  },
+  생산실2: {
+    bg: "#e3f6d6",
+    accent: "#6cae42",
+    text: "#29521a",
+    note: "#507343"
+  },
+  생산실3: {
+    bg: "#fff1c8",
+    accent: "#c89a2e",
+    text: "#63480d",
+    note: "#876a2b"
+  },
+  생산실4: {
+    bg: "#fde0df",
+    accent: "#d57876",
+    text: "#6d2e2d",
+    note: "#8d5d5b"
+  },
+  생산실5: {
+    bg: "#ece4ff",
+    accent: "#8a6bd0",
+    text: "#46306f",
+    note: "#685589"
+  },
+  생산실6: {
+    bg: "#def5f0",
+    accent: "#4ba99a",
+    text: "#1f5950",
+    note: "#4a7a73"
+  },
+  생산실7: {
+    bg: "#ffe1ed",
+    accent: "#d36d97",
+    text: "#6e2948",
+    note: "#90566f"
+  },
+  생산실8: {
+    bg: "#ebe9de",
+    accent: "#8b8561",
+    text: "#4f4a31",
+    note: "#6d684e"
+  },
+  관리자: {
+    bg: "#dceee5",
+    accent: "#4b8b68",
+    text: "#1f4c37",
+    note: "#4a6f5d"
+  }
+};
+
 const state = {
   roomOptions: [...DEFAULT_ROOM_OPTIONS, "관리자"],
   accountSettings: DEFAULT_ACCOUNT_SETTINGS.map((account) => ({ ...account })),
@@ -301,6 +358,14 @@ const parseSlotKey = (key) => {
 
 const getBookingMap = () =>
   new Map(state.bookings.map((booking) => [slotKey(booking.bookingDate, booking.slotHour), booking]));
+
+const getRoomSlotColors = (roomId) =>
+  ROOM_SLOT_COLORS[String(roomId)] || {
+    bg: "#edf1ed",
+    accent: "#7c8a7e",
+    text: "#172119",
+    note: "#5d675e"
+  };
 
 const getSlotStatus = (dateKey, hour, booking) => {
   if (!booking) {
@@ -775,6 +840,15 @@ const renderCalendar = () => {
         button.innerHTML = `<span class="available-text">예약 가능</span>`;
       } else if (status === "mine" || status === "taken" || status === "past-booked" || status === "past-mine") {
         const noteMarkup = booking && booking.note ? `<p>${booking.note}</p>` : "";
+        const roomColors = getRoomSlotColors(booking ? booking.roomId : "");
+        button.classList.add("is-room-booked");
+        if (status === "mine" || status === "past-mine") {
+          button.classList.add("is-room-mine");
+        }
+        button.style.setProperty("--slot-room-bg", roomColors.bg);
+        button.style.setProperty("--slot-room-accent", roomColors.accent);
+        button.style.setProperty("--slot-room-text", roomColors.text);
+        button.style.setProperty("--slot-room-note", roomColors.note);
         button.innerHTML = `<strong>${booking.roomId}</strong>${noteMarkup}`;
       } else {
         button.innerHTML = `<span class="past-text">.</span>`;
