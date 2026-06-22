@@ -17,35 +17,36 @@
 <body>
   <div class="board-shell">
     <header class="board-toolbar">
+      <div class="toolbar-side toolbar-left">
+        <button class="admin-entry-button is-hidden" type="button" id="admin-menu-button" aria-expanded="false">
+          계정 관리
+        </button>
+      </div>
       <div class="toolbar-nav">
         <button class="nav-button" type="button" id="prev-week-button" aria-label="이전 주">‹</button>
         <button class="today-button" type="button" id="today-button">이번 주</button>
         <button class="nav-button" type="button" id="next-week-button" aria-label="다음 주">›</button>
       </div>
-      <div class="toolbar-status">
+      <div class="toolbar-side toolbar-right">
         <button class="status-chip session-trigger is-hidden" type="button" id="session-chip" aria-expanded="false">
           <span class="status-chip-label">로그인 계정</span>
           <strong id="session-chip-main">생산실1 (05:00)</strong>
           <span id="session-chip-detail"></span>
         </button>
-        <button class="admin-entry-button is-hidden" type="button" id="admin-menu-button" aria-expanded="false">
-          계정 관리
-        </button>
-        <div class="status-chip is-hidden" id="board-status-chip">
-          <strong id="board-status-main">상태</strong>
-          <span id="board-status-detail">예약 현황을 불러오지 못했습니다.</span>
-        </div>
         <button class="logout-button is-hidden" type="button" id="header-login-button">로그인</button>
-        <button class="logout-button is-hidden" type="button" id="header-logout-button">로그아웃</button>
-        <section class="admin-menu is-hidden" id="admin-menu" aria-live="polite">
-          <div class="admin-menu-header">
-            <strong>계정 관리</strong>
-            <span>활성 계정만 표시하며 비활성화 시 비밀번호가 초기화됩니다.</span>
-          </div>
-          <div class="admin-menu-list" id="admin-menu-list"></div>
-          <p class="admin-menu-status" id="admin-menu-status"></p>
-        </section>
       </div>
+      <div class="status-chip is-hidden" id="board-status-chip">
+        <strong id="board-status-main">상태</strong>
+        <span id="board-status-detail">예약 현황을 불러오지 못했습니다.</span>
+      </div>
+      <section class="admin-menu is-hidden" id="admin-menu" aria-live="polite">
+        <div class="admin-menu-header">
+          <strong>계정 관리</strong>
+          <span>활성 계정만 표시하며 비활성화 시 비밀번호가 초기화됩니다.</span>
+        </div>
+        <div class="admin-menu-list" id="admin-menu-list"></div>
+        <p class="admin-menu-status" id="admin-menu-status"></p>
+      </section>
     </header>
 
     <main class="calendar-stage" id="calendar-stage">

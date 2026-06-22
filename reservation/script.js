@@ -123,7 +123,6 @@ const elements = {
   boardStatusMain: document.querySelector("#board-status-main"),
   boardStatusDetail: document.querySelector("#board-status-detail"),
   headerLoginButton: document.querySelector("#header-login-button"),
-  headerLogoutButton: document.querySelector("#header-logout-button"),
   currentTimeLine: document.querySelector("#current-time-line"),
   currentTimeLabel: document.querySelector("#current-time-label"),
   actionBar: document.querySelector("#action-bar"),
@@ -752,11 +751,9 @@ const renderSessionStrip = () => {
     elements.sessionChipDetail.textContent = "";
     elements.sessionChip.classList.remove("is-hidden");
     elements.headerLoginButton.classList.add("is-hidden");
-    elements.headerLogoutButton.classList.remove("is-hidden");
   } else {
     elements.sessionChip.classList.add("is-hidden");
     elements.headerLoginButton.classList.remove("is-hidden");
-    elements.headerLogoutButton.classList.add("is-hidden");
   }
 
   renderAdminMenu();
@@ -1665,7 +1662,17 @@ elements.slotReserveForm.addEventListener("submit", async (event) => {
 
 elements.cancelBookingButton.addEventListener("click", submitBulkCancel);
 elements.headerLoginButton.addEventListener("click", openLoginPrompt);
-elements.headerLogoutButton.addEventListener("click", () => performLogout());
+elements.sessionChip.addEventListener("click", () => {
+  if (!state.authenticated) {
+    return;
+  }
+
+  closeAdminMenu();
+
+  if (window.confirm(`${state.roomId} 계정에서 로그아웃할까요?`)) {
+    performLogout();
+  }
+});
 elements.modalCloseButton.addEventListener("click", closeModal);
 if (elements.modalDismissButton) {
   elements.modalDismissButton.addEventListener("click", closeModal);
