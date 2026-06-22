@@ -1025,6 +1025,10 @@ const renderActionBar = () => {
     elements.actionSummaryDetail.textContent = "선택한 시간대를 예약합니다.";
     elements.bulkReserveButton.classList.remove("is-hidden");
     elements.bulkReserveButton.textContent = state.authenticated ? "예약" : "로그인 후 예약";
+  } else if (allPastEmpty && state.isAdmin) {
+    elements.actionSummaryDetail.textContent = "관리자는 지난 빈 슬롯도 예약할 수 있습니다.";
+    elements.bulkReserveButton.classList.remove("is-hidden");
+    elements.bulkReserveButton.textContent = "예약";
   } else if (allBooked) {
     elements.actionSummaryDetail.textContent = state.isAdmin
       ? "선택한 예약을 취소하거나 다른 계정으로 수정할 수 있습니다."
@@ -1035,8 +1039,6 @@ const renderActionBar = () => {
       elements.bulkModifyButton.classList.remove("is-hidden");
       elements.bulkModifyButton.textContent = "수정";
     }
-  } else if (allPastEmpty && state.isAdmin) {
-    elements.actionSummaryDetail.textContent = "관리자는 지난 슬롯도 선택할 수 있습니다. 예약된 슬롯만 수정 또는 취소할 수 있습니다.";
   } else if (mode === "mixed") {
     elements.actionSummaryDetail.textContent = "예약된 슬롯과 빈 슬롯은 함께 처리할 수 없습니다.";
   } else {
@@ -1151,9 +1153,10 @@ const renderActionModal = () => {
 
   if (state.pendingAction === "reserve") {
     const selectedCount = getSelectionEntries().length;
+    const adminPastReservation = mode === "past" && state.isAdmin;
     elements.modalInfoCard.classList.add("is-hidden");
 
-    if (mode !== "available") {
+    if (mode !== "available" && !adminPastReservation) {
       elements.modalInfoCard.classList.remove("is-hidden");
       elements.modalInfoTitle.textContent = "예약";
       elements.modalInfoText.textContent = "예약 가능한 슬롯만 선택해주세요.";
@@ -1332,11 +1335,13 @@ const submitLogin = async () => {
 };
 
 const submitBulkReserve = async () => {
-  const entries = getSelectionEntries().filter((entry) => entry.status === "available");
+  const entries = getSelectionEntries().filter((entry) =>
+    entry.status === "available" || (state.isAdmin && entry.status === "past")
+  );
   const targetRoomId = state.isAdmin ? String(elements.reserveRoomId.value || "").trim() : state.roomId;
 
   if (!entries.length) {
-    setModalStatus("예약 가능한 슬롯을 선택해주세요.", "error");
+    setModalStatus(state.isAdmin ? "예약할 슬롯을 선택해주세요." : "예약 가능한 슬롯을 선택해주세요.", "error");
     return;
   }
 

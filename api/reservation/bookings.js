@@ -261,7 +261,7 @@ module.exports = async (req, res) => {
         return;
       }
 
-      if (slotStart <= new Date()) {
+      if (!currentUserIsAdmin && slotStart <= new Date()) {
         sendJson(res, 400, { message: "지난 시간대는 예약할 수 없습니다." });
         return;
       }
