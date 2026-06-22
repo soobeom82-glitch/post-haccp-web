@@ -1,5 +1,5 @@
 const DEFAULT_ROOM_OPTIONS = Array.from({ length: 8 }, (_, index) => `생산실${index + 1}`);
-const DEFAULT_HOURS = Array.from({ length: 16 }, (_, index) => index + 6);
+const DEFAULT_HOURS = Array.from({ length: 24 }, (_, index) => index);
 const DEFAULT_ACCOUNT_SETTINGS = DEFAULT_ROOM_OPTIONS.map((roomId) => ({
   roomId,
   isActive: true,

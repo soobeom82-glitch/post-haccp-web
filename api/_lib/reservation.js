@@ -5,7 +5,7 @@ const SESSION_MAX_AGE_SECONDS = 60 * 5;
 const ADMIN_ROOM_ID = "관리자";
 const PRODUCTION_ROOM_IDS = Array.from({ length: 8 }, (_, index) => `생산실${index + 1}`);
 const ALLOWED_ROOM_IDS = [...PRODUCTION_ROOM_IDS, ADMIN_ROOM_ID];
-const OPERATING_HOURS = Array.from({ length: 16 }, (_, index) => index + 6);
+const OPERATING_HOURS = Array.from({ length: 24 }, (_, index) => index);
 
 const getSessionSecret = () => process.env.RESERVATION_SESSION_SECRET || "post-haccp-reservation-dev-secret";
 
