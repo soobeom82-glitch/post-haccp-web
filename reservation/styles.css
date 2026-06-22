@@ -56,10 +56,11 @@ button {
 }
 
 .board-shell {
+  position: relative;
   height: 100vh;
   padding: 8px;
   display: grid;
-  grid-template-rows: var(--toolbar-height) 1fr auto;
+  grid-template-rows: var(--toolbar-height) 1fr;
   gap: 8px;
 }
 
@@ -589,6 +590,11 @@ button {
 }
 
 .action-bar {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: 8px;
+  z-index: 30;
   display: flex;
   align-items: center;
   justify-content: space-between;
