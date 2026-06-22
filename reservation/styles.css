@@ -69,7 +69,7 @@ button {
   z-index: 25;
   overflow: visible;
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: auto minmax(0, 1fr);
   align-items: center;
   gap: 10px;
   padding: 8px 12px;
@@ -92,20 +92,6 @@ button {
 
 .toolbar-status {
   position: relative;
-}
-
-.week-range-label {
-  justify-self: center;
-  font-size: clamp(1rem, 2vw, 1.55rem);
-  font-weight: 800;
-  letter-spacing: -0.03em;
-}
-
-.week-range-group {
-  justify-self: center;
-  display: flex;
-  align-items: center;
-  gap: 8px;
 }
 
 .nav-button,
@@ -837,10 +823,10 @@ button {
   }
 
   .board-toolbar {
-    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr);
     grid-template-areas:
-      "nav week"
-      "status status";
+      "nav"
+      "status";
     align-items: start;
     gap: 8px;
     padding: 10px;
@@ -848,25 +834,8 @@ button {
 
   .toolbar-nav {
     grid-area: nav;
-  }
-
-  .week-range-group {
-    grid-area: week;
-    min-width: 0;
     width: 100%;
-    justify-self: stretch;
-    justify-content: flex-end;
-    gap: 6px;
-  }
-
-  .week-range-label {
-    min-width: 0;
-    justify-self: auto;
-    font-size: clamp(1rem, 4.2vw, 1.35rem);
-    text-align: right;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    justify-content: space-between;
   }
 
   .toolbar-status {
@@ -932,33 +901,19 @@ button {
 
 @media (max-width: 640px) {
   .board-toolbar {
-    grid-template-columns: auto minmax(0, 1fr);
-    grid-template-areas:
-      "nav week"
-      "status status";
     gap: 6px;
     padding: 8px;
   }
 
   .toolbar-nav {
-    width: auto;
     gap: 6px;
   }
 
   .today-button {
+    flex: 1 1 auto;
     min-height: 38px;
     padding: 0 10px;
     font-size: 0.84rem;
-  }
-
-  .week-range-group {
-    justify-content: flex-end;
-    gap: 4px;
-  }
-
-  .week-range-label {
-    font-size: clamp(0.92rem, 3.8vw, 1.08rem);
-    text-align: right;
   }
 
   .toolbar-status {

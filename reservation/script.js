@@ -100,17 +100,18 @@ const state = {
   adminMenuBusyRoomId: "",
   refreshTimer: null,
   countdownTimer: null,
-  timeLineTimer: null
+  timeLineTimer: null,
+  pullRefreshStartY: 0,
+  pullRefreshDistance: 0,
+  pullRefreshTriggered: false
 };
 
 const elements = {
   calendarStage: document.querySelector("#calendar-stage"),
-  weekRangeLabel: document.querySelector("#week-range-label"),
   calendarGrid: document.querySelector("#calendar-grid"),
   prevWeekButton: document.querySelector("#prev-week-button"),
   nextWeekButton: document.querySelector("#next-week-button"),
   todayButton: document.querySelector("#today-button"),
-  refreshBoardButton: document.querySelector("#refresh-board-button"),
   sessionChip: document.querySelector("#session-chip"),
   sessionChipMain: document.querySelector("#session-chip-main"),
   sessionChipDetail: document.querySelector("#session-chip-detail"),
@@ -849,8 +850,6 @@ const refreshBookings = async (showErrorChip = true) => {
 };
 
 const refreshBoardData = async () => {
-  elements.refreshBoardButton.disabled = true;
-
   try {
     await hydrateSession();
     await refreshBookings();
@@ -858,7 +857,7 @@ const refreshBoardData = async () => {
     renderActionBar();
     renderActionModal();
   } finally {
-    elements.refreshBoardButton.disabled = false;
+    state.pullRefreshTriggered = false;
   }
 };
 
@@ -887,11 +886,6 @@ const renderCalendar = () => {
   elements.calendarGrid.innerHTML = "";
   elements.calendarGrid.style.gridTemplateRows =
     `var(--calendar-header-height) repeat(${Math.max(state.hours.length, 1)}, minmax(0, 1fr))`;
-
-  const weekEnd = state.weekDates[state.weekDates.length - 1];
-  if (state.weekStart && weekEnd) {
-    elements.weekRangeLabel.textContent = `${rangeDateFormatter.format(dateKeyToDate(state.weekStart))} - ${rangeDateFormatter.format(dateKeyToDate(weekEnd))}`;
-  }
 
   const corner = document.createElement("div");
   corner.className = "calendar-corner";
@@ -1531,6 +1525,51 @@ const startAutoRefresh = () => {
   }, 30000);
 };
 
+const isMobileViewport = () => window.matchMedia("(max-width: 640px)").matches;
+
+const startPullToRefresh = (event) => {
+  if (!isMobileViewport() || event.touches.length !== 1) {
+    return;
+  }
+
+  state.pullRefreshStartY = event.touches[0].clientY;
+  state.pullRefreshDistance = 0;
+  state.pullRefreshTriggered = false;
+};
+
+const movePullToRefresh = (event) => {
+  if (!isMobileViewport() || event.touches.length !== 1 || state.pullRefreshTriggered) {
+    return;
+  }
+
+  const currentY = event.touches[0].clientY;
+  const deltaY = currentY - state.pullRefreshStartY;
+
+  if (deltaY <= 0) {
+    state.pullRefreshDistance = 0;
+    return;
+  }
+
+  state.pullRefreshDistance = deltaY;
+};
+
+const endPullToRefresh = async () => {
+  if (!isMobileViewport()) {
+    return;
+  }
+
+  const shouldRefresh = state.pullRefreshDistance >= 90 && !state.pullRefreshTriggered;
+  state.pullRefreshStartY = 0;
+  state.pullRefreshDistance = 0;
+
+  if (!shouldRefresh) {
+    return;
+  }
+
+  state.pullRefreshTriggered = true;
+  await refreshBoardData();
+};
+
 elements.prevWeekButton.addEventListener("click", async () => {
   closeModal();
   clearSelection();
@@ -1559,8 +1598,6 @@ elements.todayButton.addEventListener("click", async () => {
   await refreshBookings();
   renderCalendar();
 });
-
-elements.refreshBoardButton.addEventListener("click", refreshBoardData);
 
 elements.clearSelectionButton.addEventListener("click", () => {
   clearSelection();
@@ -1652,6 +1689,16 @@ document.addEventListener("click", (event) => {
 });
 
 window.addEventListener("resize", positionCurrentTimeLine);
+elements.calendarStage.addEventListener("touchstart", startPullToRefresh, { passive: true });
+elements.calendarStage.addEventListener("touchmove", movePullToRefresh, { passive: true });
+elements.calendarStage.addEventListener("touchend", () => {
+  endPullToRefresh();
+});
+elements.calendarStage.addEventListener("touchcancel", () => {
+  state.pullRefreshStartY = 0;
+  state.pullRefreshDistance = 0;
+  state.pullRefreshTriggered = false;
+});
 
 const init = async () => {
   state.today = toDateKey(new Date());
