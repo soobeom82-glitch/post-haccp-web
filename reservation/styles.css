@@ -932,42 +932,62 @@ button {
 
 @media (max-width: 640px) {
   .board-toolbar {
-    grid-template-columns: 1fr;
+    grid-template-columns: auto minmax(0, 1fr);
     grid-template-areas:
-      "nav"
-      "week"
-      "status";
+      "nav week"
+      "status status";
+    gap: 6px;
+    padding: 8px;
   }
 
   .toolbar-nav {
-    width: 100%;
-    justify-content: space-between;
+    width: auto;
+    gap: 6px;
   }
 
   .today-button {
-    flex: 1 1 auto;
+    min-height: 38px;
+    padding: 0 10px;
+    font-size: 0.84rem;
   }
 
   .week-range-group {
-    justify-content: space-between;
+    justify-content: flex-end;
+    gap: 4px;
   }
 
   .week-range-label {
-    text-align: left;
+    font-size: clamp(0.92rem, 3.8vw, 1.08rem);
+    text-align: right;
   }
 
   .toolbar-status {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .session-trigger,
-  #board-status-chip {
-    grid-column: 1 / -1;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    gap: 6px;
   }
 
   .admin-entry-button,
   .logout-button {
-    width: 100%;
-    justify-content: center;
+    min-height: 36px;
+    padding: 0 10px;
+    font-size: 0.78rem;
+  }
+
+  .nav-button,
+  .icon-button {
+    width: 38px;
+    min-height: 38px;
+  }
+
+  .session-trigger {
+    padding: 6px 8px;
+  }
+
+  .status-chip strong {
+    font-size: 0.72rem;
+  }
+
+  .status-chip span {
+    font-size: 0.58rem;
   }
 }
