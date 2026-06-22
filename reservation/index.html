@@ -69,7 +69,7 @@
   <div class="modal-backdrop is-hidden" id="slot-modal-backdrop">
     <section class="slot-modal" role="dialog" aria-modal="true" aria-labelledby="slot-modal-title">
       <div class="modal-header">
-        <h2 id="slot-modal-title">선택된 슬롯</h2>
+        <h2 id="slot-modal-title">외포장실 예약</h2>
         <button class="modal-close-button" type="button" id="modal-close-button" aria-label="닫기">닫기</button>
       </div>
 
@@ -78,7 +78,7 @@
         <p id="slot-summary-subtext">선택된 슬롯 정보를 확인하는 중입니다.</p>
       </div>
 
-      <div class="modal-info-card">
+      <div class="modal-info-card" id="modal-info-card">
         <strong id="modal-info-title">진행</strong>
         <p id="modal-info-text">작업 방식을 확인하는 중입니다.</p>
       </div>
@@ -105,11 +105,7 @@
           <span>예약 계정</span>
           <select id="reserve-room-id" name="reserveRoomId"></select>
         </label>
-        <label class="field">
-          <span>메모</span>
-          <textarea id="reserve-note" rows="4" maxlength="80" placeholder="선택한 슬롯에 동일하게 남길 메모"></textarea>
-        </label>
-        <button class="primary-button" type="submit" id="reserve-submit-button">예약 확정</button>
+        <button class="primary-button" type="submit" id="reserve-submit-button">예약 하기</button>
       </form>
 
       <div class="modal-actions is-hidden" id="modal-booking-actions">
@@ -118,10 +114,8 @@
 
       <p class="modal-status" id="modal-status" role="status" aria-live="polite"></p>
 
-      <div class="modal-footer">
-        <button class="secondary-button is-hidden" type="button" id="modal-logout-button">로그아웃</button>
-        <button class="secondary-button" type="button" id="modal-dismiss-button">닫기</button>
-      </div>
+      <button class="secondary-button modal-footer-close is-hidden" type="button" id="modal-logout-button">로그아웃</button>
+      <button class="secondary-button modal-footer-close is-hidden" type="button" id="modal-dismiss-button">닫기</button>
     </section>
   </div>
 </body>

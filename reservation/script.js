@@ -80,6 +80,7 @@ const elements = {
   slotSummaryCard: document.querySelector("#slot-summary-card"),
   slotSummaryLabel: document.querySelector("#slot-summary-label"),
   slotSummarySubtext: document.querySelector("#slot-summary-subtext"),
+  modalInfoCard: document.querySelector("#modal-info-card"),
   modalInfoTitle: document.querySelector("#modal-info-title"),
   modalInfoText: document.querySelector("#modal-info-text"),
   slotLoginForm: document.querySelector("#slot-login-form"),
@@ -270,6 +271,11 @@ const formatHourRange = (hour) => `${String(hour).padStart(2, "0")}:00 - ${Strin
 const formatSlotLabel = (dateKey, hour) => {
   const date = dateKeyToDate(dateKey);
   return `${rangeDateFormatter.format(date)} (${weekdayFormatter.format(date)}) ${formatHourRange(hour)}`;
+};
+
+const formatSlotStart = (dateKey, hour) => {
+  const date = dateKeyToDate(dateKey);
+  return `${rangeDateFormatter.format(date)} (${weekdayFormatter.format(date)}) ${String(hour).padStart(2, "0")}:00`;
 };
 
 const formatRemainingTime = (expiresAt) => {
@@ -588,7 +594,9 @@ const closeModal = () => {
   elements.slotLoginForm.reset();
   elements.loginConfirmField.classList.add("is-hidden");
   elements.loginConfirmPin.required = false;
-  elements.reserveNote.value = "";
+  if (elements.reserveNote) {
+    elements.reserveNote.value = "";
+  }
   setModalStatus("");
   elements.modalBackdrop.classList.add("is-hidden");
   document.body.classList.remove("modal-open");
@@ -879,14 +887,18 @@ const summarizeSelectedSlots = () => {
 
   if (sorted.length === 1) {
     return {
-      title: formatSlotLabel(first.dateKey, first.slotHour),
-      detail: "1개 슬롯 선택"
+      title: `${formatSlotStart(first.dateKey, first.slotHour)} ~ ${String((first.slotHour + 1) % 24).padStart(2, "0")}:00`,
+      detail: ""
     };
   }
 
+  const rangeEnd = first.dateKey === last.dateKey
+    ? `${String(last.slotHour).padStart(2, "0")}:00`
+    : formatSlotStart(last.dateKey, last.slotHour);
+
   return {
-    title: `${sorted.length}개 슬롯 선택`,
-    detail: `${formatSlotLabel(first.dateKey, first.slotHour)} ~ ${formatSlotLabel(last.dateKey, last.slotHour)}`
+    title: `${formatSlotStart(first.dateKey, first.slotHour)} ~ ${rangeEnd}`,
+    detail: ""
   };
 };
 
@@ -897,10 +909,12 @@ const renderActionModal = () => {
   const summary = summarizeSelectedSlots();
   const mode = getSelectionMode();
 
-  elements.slotModalTitle.textContent = "선택된 슬롯";
+  elements.slotModalTitle.textContent = "외포장실 예약";
   elements.slotSummaryLabel.textContent = summary.title;
   elements.slotSummarySubtext.textContent = summary.detail;
+  elements.slotSummarySubtext.classList.toggle("is-hidden", !summary.detail);
   elements.slotSummaryCard.classList.remove("is-hidden");
+  elements.modalInfoCard.classList.remove("is-hidden");
   elements.slotLoginForm.classList.add("is-hidden");
   elements.slotReserveForm.classList.add("is-hidden");
   elements.reserveRoomField.classList.add("is-hidden");
@@ -937,20 +951,20 @@ const renderActionModal = () => {
 
   if (state.pendingAction === "reserve") {
     const selectedCount = getSelectionEntries().length;
-    elements.modalInfoTitle.textContent = "예약";
+    elements.modalInfoCard.classList.add("is-hidden");
 
     if (mode !== "available") {
+      elements.modalInfoCard.classList.remove("is-hidden");
+      elements.modalInfoTitle.textContent = "예약";
       elements.modalInfoText.textContent = "예약 가능한 슬롯만 선택해주세요.";
       return;
     }
 
-    elements.modalInfoText.textContent = `${state.roomId} 계정으로 ${selectedCount}개 슬롯을 예약합니다.`;
     if (state.isAdmin) {
-      elements.modalInfoText.textContent = `${selectedCount}개 슬롯을 선택한 계정으로 예약합니다.`;
       elements.reserveRoomField.classList.remove("is-hidden");
       elements.reserveRoomId.value = elements.reserveRoomId.value || state.roomId;
     }
-    elements.reserveSubmitButton.textContent = `${selectedCount}개 예약 확정`;
+    elements.reserveSubmitButton.textContent = "예약 하기";
     elements.slotReserveForm.classList.remove("is-hidden");
     return;
   }
@@ -965,7 +979,7 @@ const renderActionModal = () => {
     }
 
     elements.modalInfoTitle.textContent = "수정";
-    elements.modalInfoText.textContent = `${selectedCount}개 예약을 다른 계정 또는 메모로 수정합니다.`;
+    elements.modalInfoText.textContent = `${selectedCount}개 예약을 다른 계정으로 수정합니다.`;
     elements.reserveRoomField.classList.remove("is-hidden");
     elements.reserveRoomId.value = elements.reserveRoomId.value || state.roomId;
     elements.reserveSubmitButton.textContent = `${selectedCount}개 수정 확정`;
@@ -1144,7 +1158,7 @@ const submitBulkReserve = async () => {
           date: entry.dateKey,
           slotHour: entry.slotHour,
           roomId: targetRoomId,
-          note: elements.reserveNote.value.trim()
+          note: ""
         })
       });
       successCount += 1;
@@ -1153,7 +1167,9 @@ const submitBulkReserve = async () => {
     }
   }
 
-  elements.reserveNote.value = "";
+  if (elements.reserveNote) {
+    elements.reserveNote.value = "";
+  }
   await refreshBookings(false);
   clearSelection();
   renderActionModal();
@@ -1200,7 +1216,7 @@ const submitBulkModify = async () => {
           date: entry.dateKey,
           slotHour: entry.slotHour,
           roomId: targetRoomId,
-          note: elements.reserveNote.value.trim()
+          note: ""
         })
       });
       successCount += 1;
@@ -1209,7 +1225,9 @@ const submitBulkModify = async () => {
     }
   }
 
-  elements.reserveNote.value = "";
+  if (elements.reserveNote) {
+    elements.reserveNote.value = "";
+  }
   await refreshBookings(false);
   clearSelection();
   renderActionModal();
