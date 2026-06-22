@@ -832,19 +832,85 @@ button {
 }
 
 @media (max-width: 960px) {
-  .board-toolbar {
-    grid-template-columns: 1fr;
+  .board-shell {
+    grid-template-rows: auto 1fr;
   }
 
-  .week-range-label {
-    justify-self: start;
+  .board-toolbar {
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas:
+      "nav week"
+      "status status";
+    align-items: start;
+    gap: 8px;
+    padding: 10px;
+  }
+
+  .toolbar-nav {
+    grid-area: nav;
   }
 
   .week-range-group {
-    justify-self: start;
+    grid-area: week;
+    min-width: 0;
+    width: 100%;
+    justify-self: stretch;
+    justify-content: flex-end;
+    gap: 6px;
   }
 
-  .toolbar-status,
+  .week-range-label {
+    min-width: 0;
+    justify-self: auto;
+    font-size: clamp(1rem, 4.2vw, 1.35rem);
+    text-align: right;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .toolbar-status {
+    grid-area: status;
+    width: 100%;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .session-trigger,
+  #board-status-chip {
+    min-width: 0;
+    width: 100%;
+  }
+
+  #board-status-chip {
+    grid-column: 1 / -1;
+  }
+
+  .status-chip {
+    min-width: 0;
+  }
+
+  .status-chip-label {
+    font-size: 0.58rem;
+  }
+
+  .status-chip strong {
+    font-size: 0.76rem;
+  }
+
+  .status-chip span {
+    font-size: 0.62rem;
+  }
+
+  .admin-entry-button,
+  .logout-button {
+    min-height: 38px;
+    padding: 0 12px;
+    white-space: nowrap;
+  }
+
   .action-bar,
   .action-buttons,
   .modal-footer {
@@ -857,7 +923,51 @@ button {
   }
 
   .admin-menu {
-    left: 0;
-    right: auto;
+    top: 126px;
+    left: 10px;
+    right: 10px;
+    width: auto;
+  }
+}
+
+@media (max-width: 640px) {
+  .board-toolbar {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "nav"
+      "week"
+      "status";
+  }
+
+  .toolbar-nav {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .today-button {
+    flex: 1 1 auto;
+  }
+
+  .week-range-group {
+    justify-content: space-between;
+  }
+
+  .week-range-label {
+    text-align: left;
+  }
+
+  .toolbar-status {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .session-trigger,
+  #board-status-chip {
+    grid-column: 1 / -1;
+  }
+
+  .admin-entry-button,
+  .logout-button {
+    width: 100%;
+    justify-content: center;
   }
 }
