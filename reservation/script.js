@@ -1,5 +1,7 @@
 const DEFAULT_ROOM_OPTIONS = Array.from({ length: 8 }, (_, index) => `생산실${index + 1}`);
 const DEFAULT_HOURS = Array.from({ length: 16 }, (_, index) => index + 6);
+const DESKTOP_VISIBLE_DAY_COUNT = 7;
+const MOBILE_VISIBLE_DAY_COUNT = 3;
 const DEFAULT_ACCOUNT_SETTINGS = DEFAULT_ROOM_OPTIONS.map((roomId) => ({
   roomId,
   isActive: true,
@@ -167,6 +169,7 @@ const timeFormatter = new Intl.DateTimeFormat("ko-KR", {
   minute: "2-digit",
   hour12: false
 });
+const mobileCalendarMediaQuery = window.matchMedia("(max-width: 640px)");
 
 const normalizeAccountSettings = (accountSettings) => {
   const incomingMap = new Map(
@@ -335,7 +338,10 @@ const getWeekStart = (dateKey) => {
   return toDateKey(date);
 };
 
-const getWeekDates = (weekStart) => Array.from({ length: 7 }, (_, index) => addDays(weekStart, index));
+const getVisibleDayCount = () => (mobileCalendarMediaQuery.matches ? MOBILE_VISIBLE_DAY_COUNT : DESKTOP_VISIBLE_DAY_COUNT);
+
+const getRangeDates = (startDateKey, count = getVisibleDayCount()) =>
+  Array.from({ length: count }, (_, index) => addDays(startDateKey, index));
 
 const formatHourRange = (hour) => `${String(hour).padStart(2, "0")}:00 - ${String((hour + 1) % 24).padStart(2, "0")}:00`;
 
@@ -1514,8 +1520,8 @@ const submitBulkCancel = async () => {
 };
 
 const setWeekFromDate = (dateKey) => {
-  state.weekStart = getWeekStart(dateKey);
-  state.weekDates = getWeekDates(state.weekStart);
+  state.weekStart = mobileCalendarMediaQuery.matches ? dateKey : getWeekStart(dateKey);
+  state.weekDates = getRangeDates(state.weekStart);
 };
 
 const startAutoRefresh = () => {
@@ -1534,8 +1540,8 @@ const startAutoRefresh = () => {
 elements.prevWeekButton.addEventListener("click", async () => {
   closeModal();
   clearSelection();
-  state.weekStart = addDays(state.weekStart, -7);
-  state.weekDates = getWeekDates(state.weekStart);
+  state.weekStart = addDays(state.weekStart, -getVisibleDayCount());
+  state.weekDates = getRangeDates(state.weekStart);
   renderCalendar();
   await refreshBookings();
   renderCalendar();
@@ -1544,8 +1550,8 @@ elements.prevWeekButton.addEventListener("click", async () => {
 elements.nextWeekButton.addEventListener("click", async () => {
   closeModal();
   clearSelection();
-  state.weekStart = addDays(state.weekStart, 7);
-  state.weekDates = getWeekDates(state.weekStart);
+  state.weekStart = addDays(state.weekStart, getVisibleDayCount());
+  state.weekDates = getRangeDates(state.weekStart);
   renderCalendar();
   await refreshBookings();
   renderCalendar();
@@ -1652,6 +1658,15 @@ document.addEventListener("click", (event) => {
 });
 
 window.addEventListener("resize", positionCurrentTimeLine);
+mobileCalendarMediaQuery.addEventListener("change", async () => {
+  closeModal();
+  clearSelection();
+  const anchorDate = state.weekDates.includes(state.today) ? state.today : state.weekStart || state.today;
+  setWeekFromDate(anchorDate);
+  renderCalendar();
+  await refreshBookings(false);
+  renderCalendar();
+});
 
 const init = async () => {
   state.today = toDateKey(new Date());
