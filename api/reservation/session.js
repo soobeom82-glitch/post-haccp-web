@@ -12,6 +12,7 @@ const {
 const {
   ensureTables,
   getReservationUser,
+  getReservationUiSettings,
   listReservationAccountSettings,
   listReservationUserRoomIds
 } = require("../_lib/db");
@@ -29,6 +30,7 @@ module.exports = async (req, res) => {
     const session = getAuthenticatedSession(req);
     await ensureTables();
     const accountSettings = await listReservationAccountSettings();
+    const boardSettings = await getReservationUiSettings();
     const userRoomIds = new Set(await listReservationUserRoomIds());
     const adminUser = await getReservationUser(ADMIN_ROOM_ID);
     const productionAccountStates = PRODUCTION_ROOM_IDS.map((roomId) => {
@@ -74,6 +76,7 @@ module.exports = async (req, res) => {
       roomOptions,
       accountSettings: productionAccountStates,
       loginAccounts,
+      boardSettings,
       hours: OPERATING_HOURS,
       today: formatDateKeyKst(),
       expiresAt: session ? session.issuedAt + SESSION_MAX_AGE_SECONDS * 1000 : null,

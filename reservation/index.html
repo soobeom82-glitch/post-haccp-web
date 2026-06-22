@@ -19,7 +19,7 @@
     <header class="board-toolbar">
       <div class="toolbar-side toolbar-left">
         <button class="admin-entry-button is-hidden" type="button" id="admin-menu-button" aria-expanded="false">
-          계정 관리
+          설정
         </button>
       </div>
       <div class="toolbar-nav">
@@ -41,10 +41,23 @@
       </div>
       <section class="admin-menu is-hidden" id="admin-menu" aria-live="polite">
         <div class="admin-menu-header">
-          <strong>계정 관리</strong>
-          <span>활성 계정만 표시하며 비활성화 시 비밀번호가 초기화됩니다.</span>
+          <strong>설정</strong>
+          <span>외포장실 예약 보드 설정을 관리합니다.</span>
         </div>
-        <div class="admin-menu-list" id="admin-menu-list"></div>
+        <section class="admin-menu-section">
+          <div class="admin-menu-section-header">
+            <strong>스크롤</strong>
+            <span>on은 세로 스크롤, off는 한 화면 맞춤입니다.</span>
+          </div>
+          <div class="admin-scroll-controls" id="admin-scroll-controls"></div>
+        </section>
+        <section class="admin-menu-section">
+          <div class="admin-menu-section-header">
+            <strong>계정 관리</strong>
+            <span>활성 계정만 표시하며 비활성화 시 비밀번호가 초기화됩니다.</span>
+          </div>
+          <div class="admin-menu-list" id="admin-menu-list"></div>
+        </section>
         <p class="admin-menu-status" id="admin-menu-status"></p>
       </section>
     </header>

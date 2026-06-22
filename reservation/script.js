@@ -84,6 +84,7 @@ const state = {
   accountSettings: DEFAULT_ACCOUNT_SETTINGS.map((account) => ({ ...account })),
   loginAccounts: DEFAULT_LOGIN_ACCOUNTS.map((account) => ({ ...account })),
   hours: [...DEFAULT_HOURS],
+  scrollEnabled: true,
   today: "",
   weekStart: "",
   weekDates: [],
@@ -117,6 +118,7 @@ const elements = {
   sessionChipDetail: document.querySelector("#session-chip-detail"),
   adminMenuButton: document.querySelector("#admin-menu-button"),
   adminMenu: document.querySelector("#admin-menu"),
+  adminScrollControls: document.querySelector("#admin-scroll-controls"),
   adminMenuList: document.querySelector("#admin-menu-list"),
   adminMenuStatus: document.querySelector("#admin-menu-status"),
   boardStatusChip: document.querySelector("#board-status-chip"),
@@ -202,6 +204,12 @@ const normalizeLoginAccounts = (loginAccounts) => {
   return DEFAULT_LOGIN_ACCOUNTS.map((account) => incomingMap.get(account.roomId) || { ...account });
 };
 
+const normalizeBoardSettings = (boardSettings) => ({
+  scrollEnabled: boardSettings && typeof boardSettings.scrollEnabled === "boolean"
+    ? boardSettings.scrollEnabled
+    : true
+});
+
 const getRoomOptionsFromAccountSettings = (accountSettings) => [
   ...accountSettings
     .filter((account) => account.isActive)
@@ -211,6 +219,11 @@ const getRoomOptionsFromAccountSettings = (accountSettings) => [
 
 const getLoginAccountByRoomId = (roomId) =>
   state.loginAccounts.find((account) => account.roomId === roomId) || null;
+
+const applyBoardMode = () => {
+  document.body.classList.toggle("scroll-mode-on", state.scrollEnabled);
+  document.body.classList.toggle("scroll-mode-off", !state.scrollEnabled);
+};
 
 const syncLoginFormAvailability = (selectedAccount) => {
   const canProceed = Boolean(selectedAccount && (selectedAccount.canLogin || selectedAccount.needsSetup));
@@ -633,6 +646,52 @@ const closeAdminMenu = () => {
   setAdminMenuStatus("");
 };
 
+const renderAdminScrollControls = () => {
+  if (!elements.adminScrollControls) {
+    return;
+  }
+
+  elements.adminScrollControls.innerHTML = "";
+
+  [
+    { label: "on", value: true },
+    { label: "off", value: false }
+  ].forEach((option) => {
+    const button = document.createElement("button");
+    const isSelected = state.scrollEnabled === option.value;
+
+    button.type = "button";
+    button.className = `admin-toggle-button${isSelected ? " is-selected" : ""}`;
+    button.textContent = option.label;
+    button.addEventListener("click", async () => {
+      if (state.scrollEnabled === option.value) {
+        return;
+      }
+
+      setAdminMenuStatus("스크롤 모드를 변경하는 중입니다.");
+
+      try {
+        await fetchJson("/api/reservation/settings", {
+          method: "PATCH",
+          body: JSON.stringify({
+            scrollEnabled: option.value
+          })
+        });
+        await hydrateSession();
+        applyBoardMode();
+        renderCalendar();
+        renderActionBar();
+        renderActionModal();
+        setAdminMenuStatus(`스크롤 모드를 ${option.label}로 변경했습니다.`, "success");
+      } catch (error) {
+        setAdminMenuStatus(error.message, "error");
+      }
+    });
+
+    elements.adminScrollControls.appendChild(button);
+  });
+};
+
 const renderAdminMenu = () => {
   const canManageAccounts = state.authenticated && state.isAdmin;
   elements.adminMenuButton.classList.toggle("is-hidden", !canManageAccounts);
@@ -645,6 +704,7 @@ const renderAdminMenu = () => {
     return;
   }
 
+  renderAdminScrollControls();
   elements.adminMenuList.innerHTML = "";
   const visibleAccounts = state.accountSettings.filter((account) => account.isActive);
 
@@ -882,8 +942,9 @@ const buildDayHeader = (dateKey) => {
 const renderCalendar = () => {
   const bookingMap = getBookingMap();
   elements.calendarGrid.innerHTML = "";
-  elements.calendarGrid.style.gridTemplateRows =
-    `var(--calendar-header-height) repeat(${Math.max(state.hours.length, 1)}, minmax(0, 1fr))`;
+  elements.calendarGrid.style.gridTemplateRows = state.scrollEnabled
+    ? `var(--calendar-header-height) repeat(${Math.max(state.hours.length, 1)}, minmax(var(--slot-row-height), var(--slot-row-height)))`
+    : `var(--calendar-header-height) repeat(${Math.max(state.hours.length, 1)}, minmax(0, 1fr))`;
 
   const corner = document.createElement("div");
   corner.className = "calendar-corner";
@@ -1232,6 +1293,9 @@ const openActionModal = (action) => {
 const syncSessionFromPayload = (payload) => {
   state.accountSettings = normalizeAccountSettings(payload.accountSettings || state.accountSettings);
   state.loginAccounts = normalizeLoginAccounts(payload.loginAccounts || state.loginAccounts);
+  state.scrollEnabled = normalizeBoardSettings(
+    payload.boardSettings || { scrollEnabled: state.scrollEnabled }
+  ).scrollEnabled;
   state.roomOptions = Array.isArray(payload.roomOptions) && payload.roomOptions.length
     ? payload.roomOptions
     : getRoomOptionsFromAccountSettings(state.accountSettings);
@@ -1250,6 +1314,7 @@ const syncSessionFromPayload = (payload) => {
   } else if (elements.reserveRoomId.options.length) {
     elements.reserveRoomId.value = elements.reserveRoomId.options[0].value;
   }
+  applyBoardMode();
   renderSessionStrip();
   startSessionCountdown();
 };
@@ -1262,8 +1327,10 @@ const hydrateSession = async () => {
     state.today = state.today || toDateKey(new Date());
     state.accountSettings = normalizeAccountSettings(state.accountSettings);
     state.loginAccounts = normalizeLoginAccounts(state.loginAccounts);
+    state.scrollEnabled = true;
     state.roomOptions = getRoomOptionsFromAccountSettings(state.accountSettings);
     fillRoomOptions();
+    applyBoardMode();
     renderSessionStrip();
     setBoardStatus("연결 상태", "세션 정보를 확인하지 못했습니다.", true);
   }
