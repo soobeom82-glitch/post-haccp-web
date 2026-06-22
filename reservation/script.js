@@ -211,6 +211,15 @@ const getRoomOptionsFromAccountSettings = (accountSettings) => [
 const getLoginAccountByRoomId = (roomId) =>
   state.loginAccounts.find((account) => account.roomId === roomId) || null;
 
+const syncLoginFormAvailability = (selectedAccount) => {
+  const canProceed = Boolean(selectedAccount && (selectedAccount.canLogin || selectedAccount.needsSetup));
+
+  elements.loginPin.disabled = !canProceed;
+  elements.loginPin.required = canProceed;
+  elements.loginConfirmPin.disabled = !canProceed || !state.setupRequired;
+  elements.loginSubmitButton.disabled = !canProceed;
+};
+
 const selectLoginAccount = (roomId) => {
   const selectedAccount = getLoginAccountByRoomId(roomId);
 
@@ -231,9 +240,12 @@ const selectLoginAccount = (roomId) => {
     : selectedAccount.canLogin
       ? "선택한 계정으로 로그인합니다."
       : "비활성 계정입니다.";
+  syncLoginFormAvailability(selectedAccount);
   setModalStatus("");
   renderLoginAccountChips();
-  elements.loginPin.focus();
+  if (selectedAccount.canLogin || needsSetup) {
+    elements.loginPin.focus();
+  }
 };
 
 const setModalStatus = (message, type = "") => {
@@ -1049,6 +1061,7 @@ const renderActionModal = () => {
     elements.loginConfirmField.classList.toggle("is-hidden", !needsSetup);
     elements.loginConfirmPin.required = needsSetup;
     elements.loginSubmitButton.textContent = needsSetup ? "활성화" : "로그인";
+    syncLoginFormAvailability(selectedAccount);
     renderLoginAccountChips();
     return;
   }
