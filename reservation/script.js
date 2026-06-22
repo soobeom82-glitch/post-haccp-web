@@ -335,6 +335,22 @@ const formatSlotStart = (dateKey, hour) => {
   return `${rangeDateFormatter.format(date)} (${weekdayFormatter.format(date)}) ${String(hour).padStart(2, "0")}:00`;
 };
 
+const formatSlotRange = (startDateKey, startHour, endDateKey, endHourExclusive) => {
+  if (startDateKey === endDateKey) {
+    return `${formatSlotStart(startDateKey, startHour)} ~ ${String(endHourExclusive % 24).padStart(2, "0")}:00`;
+  }
+
+  return `${formatSlotStart(startDateKey, startHour)} ~ ${formatSlotStart(endDateKey, endHourExclusive % 24)}`;
+};
+
+const getSlotRangeEnd = (dateKey, hour) => {
+  const endDate = new Date(createSlotDate(dateKey, hour).getTime() + 60 * 60 * 1000);
+  return {
+    dateKey: toDateKey(endDate),
+    slotHour: endDate.getHours()
+  };
+};
+
 const formatRemainingTime = (expiresAt) => {
   const seconds = Math.max(0, Math.ceil((expiresAt - Date.now()) / 1000));
   const minutesPart = String(Math.floor(seconds / 60)).padStart(2, "0");
@@ -931,22 +947,44 @@ const summarizeSelectedSlots = () => {
   const sorted = [...entries].sort((left, right) =>
     left.dateKey === right.dateKey ? left.slotHour - right.slotHour : left.dateKey.localeCompare(right.dateKey)
   );
-  const first = sorted[0];
-  const last = sorted[sorted.length - 1];
+  const ranges = [];
+  let currentRangeStart = sorted[0];
+  let previousEntry = sorted[0];
 
-  if (sorted.length === 1) {
-    return {
-      title: `${formatSlotStart(first.dateKey, first.slotHour)} ~ ${String((first.slotHour + 1) % 24).padStart(2, "0")}:00`,
-      detail: ""
-    };
+  for (let index = 1; index < sorted.length; index += 1) {
+    const currentEntry = sorted[index];
+    const previousSlotTime = createSlotDate(previousEntry.dateKey, previousEntry.slotHour).getTime();
+    const currentSlotTime = createSlotDate(currentEntry.dateKey, currentEntry.slotHour).getTime();
+    const isContinuous = currentSlotTime - previousSlotTime === 60 * 60 * 1000;
+
+    if (!isContinuous) {
+      const rangeEnd = getSlotRangeEnd(previousEntry.dateKey, previousEntry.slotHour);
+      ranges.push(
+        formatSlotRange(
+          currentRangeStart.dateKey,
+          currentRangeStart.slotHour,
+          rangeEnd.dateKey,
+          rangeEnd.slotHour
+        )
+      );
+      currentRangeStart = currentEntry;
+    }
+
+    previousEntry = currentEntry;
   }
 
-  const rangeEnd = first.dateKey === last.dateKey
-    ? `${String(last.slotHour).padStart(2, "0")}:00`
-    : formatSlotStart(last.dateKey, last.slotHour);
+  const finalRangeEnd = getSlotRangeEnd(previousEntry.dateKey, previousEntry.slotHour);
+  ranges.push(
+    formatSlotRange(
+      currentRangeStart.dateKey,
+      currentRangeStart.slotHour,
+      finalRangeEnd.dateKey,
+      finalRangeEnd.slotHour
+    )
+  );
 
   return {
-    title: `${formatSlotStart(first.dateKey, first.slotHour)} ~ ${rangeEnd}`,
+    title: ranges.join("\n"),
     detail: ""
   };
 };

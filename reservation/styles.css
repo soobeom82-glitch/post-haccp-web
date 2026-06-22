@@ -616,6 +616,12 @@ button {
   letter-spacing: -0.03em;
 }
 
+.slot-summary-card strong {
+  display: block;
+  white-space: pre-line;
+  line-height: 1.45;
+}
+
 .slot-summary-card,
 .modal-info-card,
 .modal-form {
