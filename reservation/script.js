@@ -1005,6 +1005,10 @@ const startTimeLineTimer = () => {
 const renderActionBar = () => {
   const entries = getSelectionEntries();
   const mode = getSelectionMode();
+  const selectedCount = entries.length;
+  const allBooked = selectedCount > 0 && entries.every((entry) => Boolean(entry.booking));
+  const allAvailable = selectedCount > 0 && entries.every((entry) => !entry.booking && entry.status === "available");
+  const allPastEmpty = selectedCount > 0 && entries.every((entry) => !entry.booking && entry.status === "past");
 
   if (!entries.length) {
     elements.actionBar.classList.add("is-hidden");
@@ -1012,16 +1016,16 @@ const renderActionBar = () => {
   }
 
   elements.actionBar.classList.remove("is-hidden");
-  elements.actionSummaryMain.textContent = `${entries.length}개 선택`;
+  elements.actionSummaryMain.textContent = `${selectedCount}개 선택`;
   elements.bulkReserveButton.classList.add("is-hidden");
   elements.bulkCancelButton.classList.add("is-hidden");
   elements.bulkModifyButton.classList.add("is-hidden");
 
-  if (mode === "available") {
+  if (allAvailable) {
     elements.actionSummaryDetail.textContent = "선택한 시간대를 예약합니다.";
     elements.bulkReserveButton.classList.remove("is-hidden");
     elements.bulkReserveButton.textContent = state.authenticated ? "예약" : "로그인 후 예약";
-  } else if (mode === "booked") {
+  } else if (allBooked) {
     elements.actionSummaryDetail.textContent = state.isAdmin
       ? "선택한 예약을 취소하거나 다른 계정으로 수정할 수 있습니다."
       : "선택한 예약을 취소합니다.";
@@ -1031,8 +1035,10 @@ const renderActionBar = () => {
       elements.bulkModifyButton.classList.remove("is-hidden");
       elements.bulkModifyButton.textContent = "수정";
     }
-  } else if (mode === "past" && state.isAdmin) {
+  } else if (allPastEmpty && state.isAdmin) {
     elements.actionSummaryDetail.textContent = "관리자는 지난 슬롯도 선택할 수 있습니다. 예약된 슬롯만 수정 또는 취소할 수 있습니다.";
+  } else if (mode === "mixed") {
+    elements.actionSummaryDetail.textContent = "예약된 슬롯과 빈 슬롯은 함께 처리할 수 없습니다.";
   } else {
     elements.actionSummaryDetail.textContent = "예약 가능 슬롯과 예약된 슬롯은 함께 선택할 수 없습니다.";
   }
