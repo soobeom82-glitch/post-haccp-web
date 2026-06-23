@@ -21,6 +21,7 @@ const DEFAULT_LOGIN_ACCOUNTS = [
     canLogin: false
   }
 ];
+const LOCAL_SCROLL_MODE_STORAGE_KEY = "post-haccp-reservation-scroll-enabled";
 
 const ROOM_SLOT_COLORS = {
   생산실1: {
@@ -204,12 +205,6 @@ const normalizeLoginAccounts = (loginAccounts) => {
   return DEFAULT_LOGIN_ACCOUNTS.map((account) => incomingMap.get(account.roomId) || { ...account });
 };
 
-const normalizeBoardSettings = (boardSettings) => ({
-  scrollEnabled: boardSettings && typeof boardSettings.scrollEnabled === "boolean"
-    ? boardSettings.scrollEnabled
-    : true
-});
-
 const getRoomOptionsFromAccountSettings = (accountSettings) => [
   ...accountSettings
     .filter((account) => account.isActive)
@@ -223,6 +218,34 @@ const getLoginAccountByRoomId = (roomId) =>
 const applyBoardMode = () => {
   document.body.classList.toggle("scroll-mode-on", state.scrollEnabled);
   document.body.classList.toggle("scroll-mode-off", !state.scrollEnabled);
+};
+
+const loadLocalScrollEnabled = () => {
+  try {
+    const storedValue = window.localStorage.getItem(LOCAL_SCROLL_MODE_STORAGE_KEY);
+
+    if (storedValue === "false") {
+      return false;
+    }
+
+    if (storedValue === "true") {
+      return true;
+    }
+  } catch (error) {
+    console.warn("scroll mode localStorage read failed", error);
+  }
+
+  return true;
+};
+
+const persistLocalScrollEnabled = (scrollEnabled) => {
+  state.scrollEnabled = Boolean(scrollEnabled);
+
+  try {
+    window.localStorage.setItem(LOCAL_SCROLL_MODE_STORAGE_KEY, state.scrollEnabled ? "true" : "false");
+  } catch (error) {
+    console.warn("scroll mode localStorage write failed", error);
+  }
 };
 
 const syncLoginFormAvailability = (selectedAccount) => {
@@ -663,29 +686,20 @@ const renderAdminScrollControls = () => {
     button.type = "button";
     button.className = `admin-toggle-button${isSelected ? " is-selected" : ""}`;
     button.textContent = option.label;
-    button.addEventListener("click", async () => {
+    button.addEventListener("click", () => {
       if (state.scrollEnabled === option.value) {
         return;
       }
 
       setAdminMenuStatus("스크롤 모드를 변경하는 중입니다.");
 
-      try {
-        await fetchJson("/api/reservation/settings", {
-          method: "PATCH",
-          body: JSON.stringify({
-            scrollEnabled: option.value
-          })
-        });
-        await hydrateSession();
-        applyBoardMode();
-        renderCalendar();
-        renderActionBar();
-        renderActionModal();
-        setAdminMenuStatus(`스크롤 모드를 ${option.label}로 변경했습니다.`, "success");
-      } catch (error) {
-        setAdminMenuStatus(error.message, "error");
-      }
+      persistLocalScrollEnabled(option.value);
+      applyBoardMode();
+      renderAdminScrollControls();
+      renderCalendar();
+      renderActionBar();
+      renderActionModal();
+      setAdminMenuStatus(`스크롤 모드를 ${option.label}로 변경했습니다.`, "success");
     });
 
     elements.adminScrollControls.appendChild(button);
@@ -1293,9 +1307,6 @@ const openActionModal = (action) => {
 const syncSessionFromPayload = (payload) => {
   state.accountSettings = normalizeAccountSettings(payload.accountSettings || state.accountSettings);
   state.loginAccounts = normalizeLoginAccounts(payload.loginAccounts || state.loginAccounts);
-  state.scrollEnabled = normalizeBoardSettings(
-    payload.boardSettings || { scrollEnabled: state.scrollEnabled }
-  ).scrollEnabled;
   state.roomOptions = Array.isArray(payload.roomOptions) && payload.roomOptions.length
     ? payload.roomOptions
     : getRoomOptionsFromAccountSettings(state.accountSettings);
@@ -1327,7 +1338,7 @@ const hydrateSession = async () => {
     state.today = state.today || toDateKey(new Date());
     state.accountSettings = normalizeAccountSettings(state.accountSettings);
     state.loginAccounts = normalizeLoginAccounts(state.loginAccounts);
-    state.scrollEnabled = true;
+    state.scrollEnabled = loadLocalScrollEnabled();
     state.roomOptions = getRoomOptionsFromAccountSettings(state.accountSettings);
     fillRoomOptions();
     applyBoardMode();
@@ -1777,6 +1788,8 @@ elements.calendarStage.addEventListener("touchcancel", () => {
 
 const init = async () => {
   state.today = toDateKey(new Date());
+  state.scrollEnabled = loadLocalScrollEnabled();
+  applyBoardMode();
   setWeekFromDate(state.today);
   fillRoomOptions();
   renderCalendar();

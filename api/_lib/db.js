@@ -78,14 +78,6 @@ const ensureTables = async () => {
     )
   `;
 
-  await sql`
-    CREATE TABLE IF NOT EXISTS reservation_ui_settings (
-      setting_key TEXT PRIMARY KEY,
-      setting_value TEXT NOT NULL,
-      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-    )
-  `;
-
   for (const roomId of RESERVATION_PRODUCTION_ROOM_IDS) {
     await sql`
       INSERT INTO reservation_account_settings (room_id)
@@ -93,12 +85,6 @@ const ensureTables = async () => {
       ON CONFLICT (room_id) DO NOTHING
     `;
   }
-
-  await sql`
-    INSERT INTO reservation_ui_settings (setting_key, setting_value)
-    VALUES ('scroll_enabled', 'true')
-    ON CONFLICT (setting_key) DO NOTHING
-  `;
 };
 
 const incrementPeriodCount = async (periodType, periodKey, amount) => {
@@ -314,36 +300,6 @@ const setReservationAccountPinResetRequired = async (roomId, pinResetRequired) =
     pinResetRequired: Boolean(row.pin_reset_required),
     createdAt: row.created_at,
     updatedAt: row.updated_at
-  };
-};
-
-const getReservationUiSettings = async () => {
-  const { rows } = await sql`
-    SELECT setting_key, setting_value
-    FROM reservation_ui_settings
-    WHERE setting_key = 'scroll_enabled'
-    LIMIT 1
-  `;
-
-  const row = rows[0];
-
-  return {
-    scrollEnabled: row ? String(row.setting_value) !== "false" : true
-  };
-};
-
-const setReservationUiScrollEnabled = async (scrollEnabled) => {
-  await sql`
-    INSERT INTO reservation_ui_settings (setting_key, setting_value)
-    VALUES ('scroll_enabled', ${scrollEnabled ? "true" : "false"})
-    ON CONFLICT (setting_key)
-    DO UPDATE SET
-      setting_value = EXCLUDED.setting_value,
-      updated_at = NOW()
-  `;
-
-  return {
-    scrollEnabled: Boolean(scrollEnabled)
   };
 };
 
@@ -567,7 +523,6 @@ module.exports = {
   deleteReservationBooking,
   deleteReservationBookingById,
   getReservationAccountSetting,
-  getReservationUiSettings,
   getReservationBookingById,
   getReservationUser,
   listReservationUserRoomIds,
@@ -583,7 +538,6 @@ module.exports = {
   markReportSent,
   setReservationAccountActive,
   setReservationAccountPinResetRequired,
-  setReservationUiScrollEnabled,
   updateReservationBooking,
   upsertReservationUser
 };
