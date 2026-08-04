@@ -24,6 +24,16 @@ const ensureTables = async () => {
   `;
 
   await sql`
+    CREATE TABLE IF NOT EXISTS visit_daily_source_stats (
+      period_key TEXT NOT NULL,
+      source TEXT NOT NULL,
+      total_visits INTEGER NOT NULL DEFAULT 0,
+      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      PRIMARY KEY (period_key, source)
+    )
+  `;
+
+  await sql`
     CREATE TABLE IF NOT EXISTS visit_report_dispatches (
       report_type TEXT NOT NULL,
       report_key TEXT NOT NULL,
@@ -109,6 +119,17 @@ const incrementCityCount = async (periodKey, city, amount) => {
   `;
 };
 
+const incrementSourceCount = async (periodKey, source, amount) => {
+  await sql`
+    INSERT INTO visit_daily_source_stats (period_key, source, total_visits)
+    VALUES (${periodKey}, ${source}, ${amount})
+    ON CONFLICT (period_key, source)
+    DO UPDATE SET
+      total_visits = visit_daily_source_stats.total_visits + EXCLUDED.total_visits,
+      updated_at = NOW()
+  `;
+};
+
 const incrementInteractionCount = async (periodKey, eventName, eventLabel, pagePath, amount) => {
   await sql`
     INSERT INTO interaction_detail_daily_stats (period_key, event_name, event_label, page_path, total_events)
@@ -142,6 +163,20 @@ const getDailyCityCounts = async (periodKey) => {
 
   return rows.map((row) => ({
     city: String(row.city || "Unknown"),
+    count: Number(row.total_visits || 0)
+  }));
+};
+
+const getDailySourceCounts = async (periodKey) => {
+  const { rows } = await sql`
+    SELECT source, total_visits
+    FROM visit_daily_source_stats
+    WHERE period_key = ${periodKey}
+    ORDER BY total_visits DESC, source ASC
+  `;
+
+  return rows.map((row) => ({
+    source: String(row.source || "기타"),
     count: Number(row.total_visits || 0)
   }));
 };
@@ -531,7 +566,9 @@ module.exports = {
   incrementPeriodCount,
   getPeriodTotal,
   getDailyCityCounts,
+  getDailySourceCounts,
   hasSentReport,
+  incrementSourceCount,
   listReservationAccountSettings,
   listReservationBookingsInRange,
   listReservationBookings,

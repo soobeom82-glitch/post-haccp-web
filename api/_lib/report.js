@@ -1,5 +1,6 @@
 const {
   getDailyCityCounts,
+  getDailySourceCounts,
   getPeriodTotal,
   hasSentReport,
   markReportSent
@@ -36,7 +37,15 @@ const formatMonthlyAverageWithDelta = (currentTotal, previousTotal, currentMonth
   return `${formatAverage(currentAverage)} (직전 평균 ${formatAverage(previousAverage)} / ${formatDelta(currentAverage, previousAverage)})`;
 };
 
-const buildDailyMessage = ({ currentKey, previousKey, currentTotal, previousTotal, topCities }) => {
+const buildDailyMessage = ({
+  currentKey,
+  previousKey,
+  currentTotal,
+  previousTotal,
+  topCities,
+  sourceCounts
+}) => {
+  const topThreeCities = topCities.slice(0, 3);
 
   const lines = [
     "일간 방문 리포트",
@@ -47,11 +56,21 @@ const buildDailyMessage = ({ currentKey, previousKey, currentTotal, previousTota
     "도시별 방문자"
   ];
 
-  if (!topCities.length) {
+  if (!topThreeCities.length) {
     lines.push("- 집계된 도시 데이터 없음");
   } else {
-    topCities.forEach((entry) => {
+    topThreeCities.forEach((entry) => {
       lines.push(`- ${entry.city}: ${entry.count}명`);
+    });
+  }
+
+  lines.push("", "유입 경로");
+
+  if (!sourceCounts.length) {
+    lines.push("- 집계된 유입 경로 데이터 없음");
+  } else {
+    sourceCounts.forEach((entry) => {
+      lines.push(`- ${entry.source}: ${entry.count}명`);
     });
   }
 
@@ -96,6 +115,7 @@ module.exports = {
   buildDailyMessage,
   buildWeeklyMessage,
   buildMonthlyMessage,
+  fetchDailySourceCounts: getDailySourceCounts,
   fetchPeriodStats,
   fetchDailyCityCounts: getDailyCityCounts,
   sendReportIfNeeded

@@ -56,7 +56,8 @@ const sendVisitSignal = () => {
   const payload = {
     path: window.location.pathname,
     title: document.title,
-    referrer: document.referrer
+    referrer: document.referrer,
+    search: window.location.search
   };
 
   try {

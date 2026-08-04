@@ -84,6 +84,156 @@ const formatReferrer = (referrer = "") => {
   }
 };
 
+const normalizeSourceName = (value = "") => {
+  const safeValue = String(value || "").trim().toLowerCase();
+
+  if (!safeValue) {
+    return "기타";
+  }
+
+  if (safeValue.includes("google")) {
+    return "구글";
+  }
+
+  if (safeValue.includes("naver")) {
+    return "네이버";
+  }
+
+  if (safeValue.includes("daum") || safeValue.includes("kakao")) {
+    return "카카오";
+  }
+
+  if (safeValue.includes("instagram") || safeValue === "ig") {
+    return "인스타그램";
+  }
+
+  if (safeValue.includes("facebook") || safeValue === "meta" || safeValue === "fb") {
+    return "페이스북";
+  }
+
+  if (safeValue.includes("youtube")) {
+    return "유튜브";
+  }
+
+  if (safeValue.includes("bing")) {
+    return "빙";
+  }
+
+  return safeValue;
+};
+
+const resolveSourceFromUtm = (utmSource = "", utmMedium = "", searchParams = null) => {
+  const sourceName = normalizeSourceName(utmSource);
+  const mediumName = String(utmMedium || "").trim().toLowerCase();
+
+  if (
+    sourceName === "구글" &&
+    (mediumName === "cpc" || mediumName === "paid" || mediumName === "display" ||
+      searchParams?.has("gclid") || searchParams?.has("gbraid") || searchParams?.has("wbraid") ||
+      searchParams?.has("gad_source"))
+  ) {
+    return "구글 광고";
+  }
+
+  if (sourceName === "네이버" && (mediumName === "cpc" || mediumName === "paid")) {
+    return "네이버 광고";
+  }
+
+  if (sourceName === "카카오" && mediumName === "social") {
+    return "카카오톡";
+  }
+
+  if (mediumName === "social" || mediumName === "sns") {
+    return `${sourceName} SNS`;
+  }
+
+  if (mediumName === "cpc" || mediumName === "paid") {
+    return `${sourceName} 광고`;
+  }
+
+  return sourceName;
+};
+
+const resolveSourceFromReferrer = (referrer = "") => {
+  const safeReferrer = String(referrer || "").trim();
+
+  if (!safeReferrer) {
+    return "직접 유입";
+  }
+
+  try {
+    const url = new URL(safeReferrer);
+    const host = url.hostname.replace(/^www\./, "").toLowerCase();
+
+    if (host.includes("google.")) {
+      return "구글 검색";
+    }
+
+    if (host.includes("search.naver.com") || host === "naver.com" || host.endsWith(".naver.com")) {
+      return "네이버 검색";
+    }
+
+    if (host.includes("pf.kakao.com")) {
+      return "카카오톡 채널";
+    }
+
+    if (host.includes("daum.net") || host.includes("search.daum.net")) {
+      return "다음 검색";
+    }
+
+    if (host.includes("kakao.com")) {
+      return "카카오";
+    }
+
+    if (host.includes("instagram.com")) {
+      return "인스타그램";
+    }
+
+    if (host.includes("facebook.com") || host.includes("fb.com")) {
+      return "페이스북";
+    }
+
+    if (host.includes("youtube.com") || host.includes("youtu.be")) {
+      return "유튜브";
+    }
+
+    if (host.includes("bing.com")) {
+      return "빙 검색";
+    }
+
+    return host || "기타";
+  } catch (error) {
+    return safeReferrer;
+  }
+};
+
+const resolveTrafficSource = ({ referrer = "", search = "" } = {}) => {
+  const safeSearch = String(search || "").trim();
+
+  try {
+    const searchParams = new URLSearchParams(safeSearch.startsWith("?") ? safeSearch.slice(1) : safeSearch);
+    const utmSource = searchParams.get("utm_source");
+    const utmMedium = searchParams.get("utm_medium");
+
+    if (utmSource) {
+      return resolveSourceFromUtm(utmSource, utmMedium, searchParams);
+    }
+
+    if (
+      searchParams.has("gclid") ||
+      searchParams.has("gbraid") ||
+      searchParams.has("wbraid") ||
+      searchParams.has("gad_source")
+    ) {
+      return "구글 광고";
+    }
+  } catch (error) {
+    return resolveSourceFromReferrer(referrer);
+  }
+
+  return resolveSourceFromReferrer(referrer);
+};
+
 const detectDeviceType = (userAgent = "") => {
   const safeUa = String(userAgent || "");
 
@@ -104,5 +254,6 @@ module.exports = {
   formatLocationFromHeaders,
   formatPageLabel,
   formatReferrer,
+  resolveTrafficSource,
   formatTimestampKst
 };

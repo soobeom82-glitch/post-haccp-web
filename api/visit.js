@@ -1,9 +1,15 @@
-const { ensureTables, incrementCityCount, incrementPeriodCount } = require("./_lib/db");
+const {
+  ensureTables,
+  incrementCityCount,
+  incrementPeriodCount,
+  incrementSourceCount
+} = require("./_lib/db");
 const {
   detectDeviceType,
   formatLocationFromHeaders,
   formatPageLabel,
   formatReferrer,
+  resolveTrafficSource,
   formatTimestampKst
 } = require("./_lib/analytics");
 const { formatDate, getMonthKey, startOfWeek } = require("./_lib/time");
@@ -45,8 +51,10 @@ module.exports = async (req, res) => {
   const pagePath = String(payload.path || "/").trim() || "/";
   const pageTitle = String(payload.title || "").trim() || "-";
   const referrer = String(payload.referrer || "").trim();
+  const search = String(payload.search || "").trim();
   const location = formatLocationFromHeaders(req.headers);
   const deviceType = detectDeviceType(req.headers["user-agent"]);
+  const source = resolveTrafficSource({ referrer, search });
 
   const realtimeMessage = [
     "실시간 방문 로그",
@@ -54,6 +62,7 @@ module.exports = async (req, res) => {
     `페이지: ${formatPageLabel(pagePath)}`,
     `제목: ${pageTitle}`,
     `유입: ${formatReferrer(referrer)}`,
+    `유입 경로: ${source}`,
     `디바이스: ${deviceType}`,
     `위치: ${location}`,
     `시간: ${formatTimestampKst()} KST`
@@ -64,6 +73,7 @@ module.exports = async (req, res) => {
     await Promise.all([
       incrementPeriodCount("day", todayKey, 1),
       incrementCityCount(todayKey, city, 1),
+      incrementSourceCount(todayKey, source, 1),
       incrementPeriodCount("week", weekKey, 1),
       incrementPeriodCount("month", monthKey, 1)
     ]);
