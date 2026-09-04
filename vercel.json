@@ -1,4 +1,11 @@
 {
+  "redirects": [
+    {
+      "source": "/dongtan-branch.html",
+      "destination": "/",
+      "permanent": true
+    }
+  ],
   "crons": [
     {
       "path": "/api/reports/daily",
