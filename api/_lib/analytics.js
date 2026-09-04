@@ -16,6 +16,7 @@ const pageNameMap = {
   "/index.html": "메인 랜딩",
   "/gwanggyo-haccp-facility.html": "광교점 상세",
   "/guri-branch.html": "구리점 상세",
+  "/pyeongtaek-branch.html": "평택점 상세",
   "/haccp-preparation-support.html": "HACCP 준비 지원",
   "/food-manufacturing-consulting.html": "식품 제조 상담"
 };
