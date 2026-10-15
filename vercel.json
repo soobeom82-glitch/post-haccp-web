@@ -4,6 +4,11 @@
       "source": "/dongtan-branch.html",
       "destination": "/",
       "permanent": true
+    },
+    {
+      "source": "/pyeongtaek-branch.html",
+      "destination": "/",
+      "permanent": true
     }
   ],
   "crons": [

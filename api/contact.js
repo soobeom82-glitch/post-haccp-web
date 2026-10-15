@@ -56,7 +56,7 @@ module.exports = async (req, res) => {
     : [];
 
   const lines = [
-    "새 입점 상담 신청이 접수되었습니다.",
+    "새 상담 신청이 접수되었습니다.",
     "",
     `연락처: ${phone}`,
     `회사명: ${company || "-"}`,
@@ -65,7 +65,7 @@ module.exports = async (req, res) => {
     `생산 예정 품목: ${product || "-"}`,
     `현재 사업 단계: ${stage || "-"}`,
     `HACCP 인증 필요 여부: ${haccpNeed || "-"}`,
-    `관심 지점: ${branches.length ? branches.join(", ") : "-"}`,
+    `관심 내용: ${branches.length ? branches.join(", ") : "-"}`,
     `희망 상담 내용: ${message || "-"}`
   ];
 
