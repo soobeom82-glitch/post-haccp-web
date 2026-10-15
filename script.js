@@ -345,6 +345,7 @@ if (contactForm && contactFormStatus) {
       stage: String(formData.get("stage") || "").trim(),
       haccpNeed: String(formData.get("haccp_need") || "").trim(),
       branches: formData.getAll("branches").map((value) => String(value).trim()).filter(Boolean),
+      inquiryType: String(formData.get("inquiry_type") || "").trim(),
       message: String(formData.get("message") || "").trim(),
       website: String(formData.get("website") || "").trim()
     };

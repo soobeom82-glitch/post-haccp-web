@@ -50,24 +50,34 @@ module.exports = async (req, res) => {
   const product = String(payload.product || "").trim();
   const stage = String(payload.stage || "").trim();
   const haccpNeed = String(payload.haccpNeed || "").trim();
+  const inquiryType = String(payload.inquiryType || "").trim();
   const message = String(payload.message || "").trim();
   const branches = Array.isArray(payload.branches)
     ? payload.branches.map((value) => String(value).trim()).filter(Boolean)
     : [];
 
-  const lines = [
-    "새 상담 신청이 접수되었습니다.",
-    "",
-    `연락처: ${phone}`,
-    `회사명: ${company || "-"}`,
-    `담당자명: ${name || "-"}`,
-    `이메일: ${email || "-"}`,
-    `생산 예정 품목: ${product || "-"}`,
-    `현재 사업 단계: ${stage || "-"}`,
-    `HACCP 인증 필요 여부: ${haccpNeed || "-"}`,
-    `관심 내용: ${branches.length ? branches.join(", ") : "-"}`,
-    `희망 상담 내용: ${message || "-"}`
-  ];
+  const lines = inquiryType
+    ? [
+      `새 ${inquiryType} 문의가 접수되었습니다.`,
+      "",
+      `연락처: ${phone}`,
+      `회사명 또는 관심 목적: ${company || "-"}`,
+      `담당자명: ${name || "-"}`,
+      `문의 내용: ${message || "-"}`
+    ]
+    : [
+      "새 입점 상담 신청이 접수되었습니다.",
+      "",
+      `연락처: ${phone}`,
+      `회사명: ${company || "-"}`,
+      `담당자명: ${name || "-"}`,
+      `이메일: ${email || "-"}`,
+      `생산 예정 품목: ${product || "-"}`,
+      `현재 사업 단계: ${stage || "-"}`,
+      `HACCP 인증 필요 여부: ${haccpNeed || "-"}`,
+      `관심 지점: ${branches.length ? branches.join(", ") : "-"}`,
+      `희망 상담 내용: ${message || "-"}`
+    ];
 
   try {
     await sendTelegramMessage(lines.join("\n"));
